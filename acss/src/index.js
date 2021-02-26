@@ -1,13 +1,12 @@
 import React from 'react';
 import ReactDom from 'react-dom';
-import Article from './article/article';
-import Project from './project/project';
+
+import User from './user/user';
 
 const App=(props)=>{
 	    
 	    return <>
-		            <Article/>
-		            <Project/>
+		            <User/>
 		       </>
 }
 
