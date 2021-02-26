@@ -26,7 +26,7 @@ export const all= async(url)=>{
          }
         catch(e) {
 
-         	   console.warn(e);
+         	   return e
         }			
 }
 
@@ -55,7 +55,7 @@ export const view= async(url)=>{
 
 	        catch(e){
 
-	        	  console.warn(e)
+				return e
 	        }
 }
 
@@ -87,20 +87,17 @@ export const create= async (data_,url)=>{
 
 	        catch(e){
 
-	        	  console.warn(e)
+				return e
 	        }
 }
 
-export const delete_= async(url,token)=>{
+export const destroy= async(url)=>{
 	  
              let error=false;
-
-             PARAMS_CONFIG.HEADERS.autorization=token;
-
 		    try{
 		        	const res = await fetch(PARAMS_CONFIG.URI+url,{
 			          	       method:'delete',
-			          	       headers:PARAMS_CONFIG.HEADERS,
+			          	       headers:PARAMS_CONFIG.HEADERS
 	                        });
 
                    const data = await res.json()
@@ -119,25 +116,24 @@ export const delete_= async(url,token)=>{
 
 	        catch(e){
 
-	        	  console.warn(e)
+	        	  return e
 	        }
 }
 
-export const update=async(data,url)=>{
+export const update=async(data_,url)=>{
 	            
 	         const error=false;
 
-             PARAMS_CONFIG.HEADERS.autorization=data.token;
-             delete data.token;
+             PARAMS_CONFIG.HEADERS.autorization=data_.token;
 
 		     try{
 		        	const res= await axios({
 		          	             url:PARAMS_CONFIG.URI+url,
-				          	     method:'put',
+				          	     method:'PUT',
 				          	     headers:PARAMS_CONFIG.HEADERS,
-				          	     data:JSON.stringify(data)
+				          	     data:data_
 				            });
-		            data= await res.data;
+		           const data= await res.data;
 
 	        	    if(res.status===404){
 	        	   	       throw new Error(data)
@@ -151,27 +147,24 @@ export const update=async(data,url)=>{
 	        	    }
 	        }
 	        catch(e){
-	        	  console.warn(e)
+
+	        	  return e
 	        }
 }
 
 export const login=async(data_,url)=>{
-	        
 	         let error=false;
-             PARAMS_CONFIG.HEADERS.autorization=data_.token;
-
 		     try{
 		        	const res= await axios({
 		          	             url:PARAMS_CONFIG.URI+url,
 				          	     method:'post',
 				          	     headers:PARAMS_CONFIG.HEADERS,
-				          	     data:JSON.stringify(data_)
+				          	     data:data_
 				            });
 
                     const data = await res.data;
 
 	        	    if(res.status===404){
-	        	   	       
 	        	   	       throw new Error(data)
 
 	        	    }else if(res.status===201){
@@ -185,7 +178,7 @@ export const login=async(data_,url)=>{
 
 	        catch(e){
 
-	        	  console.warn(e)
+	        	  return e
 	        }
 }
 

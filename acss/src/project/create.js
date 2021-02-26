@@ -6,7 +6,7 @@ const Create=()=>{
     const [success,setSuccess]=useState(false);
     const [message,setMessage]=useState('');
     const inputRefFile=useRef(null);
-    const URL='/aricle/create';
+    const URL='/project/create';
     const saisir=(e)=>{
           e.preventDefault();
           const name=e.target.name;
@@ -74,7 +74,6 @@ const Create=()=>{
     
 
     return <form onSubmit={(e)=>send(e)}>
-               <h2>Article formulaire</h2>
               {message &&  <div className={success? 'valide':'invalid'}> {message}</div>}
               <table>
                 <tbody>

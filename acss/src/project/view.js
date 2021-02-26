@@ -4,9 +4,9 @@ import * as API from '../api/config/api';
 const View  =(props)=>{
 
           const {id}=useParams();
-          const URL=`/article/view/${id}`;
-          const [view,setView]=useState({})
-          
+          const URL=`/project/view/${id}`;
+          const [view,setView]=useState(null)
+
           const init =useCallback(  async()=>{
                const res= await  API.view(URL);
                if(res){ 
@@ -24,20 +24,17 @@ const View  =(props)=>{
           useEffect(()=>{
                 init()
           },[init])
-
-         if(view){ 
+         
+          if(view){ 
 
           return <>
-                      <h3>view aricle</h3>
                     <ul>
-                    <Link to='/article/'>HOME</Link>
-                    <li><Link>{view.categorie}</Link></li>
-                    <li><Link>{view.title}</Link></li>
-                    <li><Link>{view.comment}</Link></li>
+                    <Link to='/project/'>HOME</Link>
+                      <li><Link to={ `/project/update/${view._id}`}>{view.title}</Link></li>
+                      <li><Link>{view.comment}</Link></li>
                     </ul>
                 
           </>
-
           }else return <div>Aucun article</div>
 
 }
