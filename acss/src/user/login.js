@@ -5,7 +5,7 @@ const Login=(props)=>{
     const [success,setSuccess]=useState(false);
     const [message,setMessage]=useState('');
     const inputRefFile=useRef(null);
-    const URL='/user/create';
+    const URL='/user/login/';
    
     const saisir=(e)=>{
         e.preventDefault();
@@ -53,7 +53,7 @@ const Login=(props)=>{
 
     return <form onSubmit={(e)=>send(e)}>
               {message &&  <div className={success? 'valide':'invalid'}> {message}</div>}
-             
+    
               <table>
                 <tbody>
 

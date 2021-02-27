@@ -72,6 +72,7 @@ export const create= async (data_,url)=>{
 				        	 });
 
 		            const data=await res.data;
+					console.log(data)
 
 	        	   if(res.status===404){
 
@@ -86,8 +87,8 @@ export const create= async (data_,url)=>{
 	        }
 
 	        catch(e){
-
-				return e
+                 
+				return e.message
 	        }
 }
 

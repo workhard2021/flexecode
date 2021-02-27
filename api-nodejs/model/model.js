@@ -31,7 +31,10 @@ const userSchema= new mongoose.Schema({
 	     email:{type:String,required:true,unique:true},
 	     dateInsert:{type:Date,Default:Date.now()},
 	     role:{type:String,Default:'user'},
-	     comment:{type:String}
+	     comment:{type:String},
+		 linkGithub:{type:String},
+		 deni:{type:Boolean},
+		 connexion:{type:Boolean}
 	 });
 
 const  modelUser = new mongoose.model('user',userSchema);

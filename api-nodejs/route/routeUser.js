@@ -9,13 +9,16 @@ const {auth,multer_}=require('../middleware/middleware');
 const urlencoded=bodyParser.urlencoded({ extended: false })
 
 
-routeUser.get('/all/',userCtl.all);
-routeUser.get('/view/:id',userCtl.view);
-routeUser.post('/create/',bodyParser.json(),userCtl.create);
+
+routeUser.post('/sign/',bodyParser.json(),userCtl.create);
 routeUser.post('/update/',auth,multer_.array('image',1),userCtl.update);
-routeUser.put('/login/:id',bodyParser.json(),userCtl.connexion);
+routeUser.put('/login/:id',auth,bodyParser.json(),userCtl.connexion);
 routeUser.get('/search/:fullName',userCtl.search);
 routeUser.delete('/destroy/:id',auth,userCtl.destroy);
+routeUser.get('/deni/:id',auth,userCtl.deni);
+routeUser.get('/deconnexion/:id',userCtl.deconnexion);
+routeUser.get('/all/',userCtl.all);
+routeUser.get('/view/:id',userCtl.view);
 
 module.exports=routeUser;
 

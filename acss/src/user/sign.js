@@ -6,7 +6,7 @@ const Sign=(props)=>{
     const [success,setSuccess]=useState(false);
     const [message,setMessage]=useState('');
     const inputRefFile=useRef(null);
-    const URL='/user/create';
+    const URL='/user/sign/';
    
     const saisir=(e)=>{
         e.preventDefault();

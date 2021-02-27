@@ -8,7 +8,6 @@ const MenagerUser=(props)=>{
    const [success,setSuccess]=useState(false);
    const [message,setMessage]=useState('');
    const [up,setUp]=useState(false);
-   const {categorie}=useParams()
 
    const URL=`/user/all`;
    const init= useCallback (  async ()=>{
@@ -35,12 +34,23 @@ const MenagerUser=(props)=>{
                   setMessage('veuillez actualiser la page')
            }     
    }
+   const deni= async(id)=>{
+            const URL=`/user/deni/${id}`
+           const res= await API.view(URL);
+           if(res.error){
+                   setMessage(res.data)
+                   setSuccess(true)
+           }else{  
+                   setSuccess(false)
+                   setMessage(res.data)
+           }
+   }
 
    useEffect(()=>{
           setUp(true);
           init()
          return ()=>setUp(false)
-   },[up,success,init])
+   },[up,success,message,init])
    
      if(!up){
            return null
@@ -62,7 +72,7 @@ return <section>
                           <li>{value.email}</li>
                           <li> <Link to={`/user/profil/${value._id}`}>{value.fullName} voir profil </Link></li>
                           <li><button onClick={(e)=>destroy(value._id)}>Delete</button></li>
-            
+                          {/*<li><button onClick={(e)=>deni(value._id)}>{deni? 'Bloqué':'Debloqué'}</button></li>*/}
                          </React.Fragment>})
              }
            </ul>  

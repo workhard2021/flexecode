@@ -1,21 +1,29 @@
 
 const {modelUser}=require('../model/model');
-const {deleteImage,ValidationMail,upload,destroy_cloud}=require('../middleware/middleware');
+const {ValidationMail,upload,destroy_cloud}=require('../middleware/middleware');
 
-const User=modelUser;
 const bcrypt =require('bcrypt');
 const jwt = require('jsonwebtoken');
 const salt=10;
 
 const create=(req,res,next)=>{
 
-      const data=req.body;
+       let data=req.body;
+	   console.log(data);return false;
+	   data.deni=false;
+	   data.connexion=false;
+	   data.role='admin';
+
       let error={};
      
      if(data.password ==='' || data.password===undefined ){
 
      	 error={...error,password:'Entrez votre mot de passe'}
      }
+	 if(data.password.length<6){
+
+		error={...error,password:'Mot de passe doit être moins de 6 caractères'}
+    }
      
      if(!ValidationMail(data.email)) {
      	 error={...error,email:'Votre email est invalide'}
@@ -29,18 +37,16 @@ const create=(req,res,next)=>{
      	   return res.status(201).json(error);
      }
    
-     User.find({email:data.email}).then(item=>{
+     modelUser.find({email:data.email}).then(item=>{
 
       	     if(item.length>0) {
-
       	     	 res.status(201).json('Cet email existe déja')
-
       	     }else {
 
 		      bcrypt.hash(data.password,salt)
 		     .then((password)=> {
 
-		     	   User.insertMany({...data,password,imageUrl:'a.jpg',dataInsert:Date.now})
+		     	   modelUser.insertMany({...data,password,imageUrl:'a.jpg',dataInsert:Date.now})
 		     	   .then(item=> {
 
 				        res.status(200).json('Profil a été crée')
@@ -62,7 +68,7 @@ const connexion=(req,res,next)=>{
 	 	   return res.status(201).json('Email est invalide')
 	 }
 
-	 User.findOne({email:data.email}).then((item)=>{
+	 modelUser.findOne({email:data.email}).then((item)=>{
 	
 	    if(item!==null) { 
 	    	  
@@ -100,7 +106,7 @@ const connexion=(req,res,next)=>{
 
 const view=(req,res,next)=>{
 
-	    User.findOne({_id:req.params.id}).then((item)=> {
+	    modelUser.findOne({_id:req.params.id}).then((item)=> {
 
 	            return res.status(200).json(item)
 
@@ -109,7 +115,7 @@ const view=(req,res,next)=>{
 
 const all= (req,res,next)=>{
          
-	    User.find().sort({_id:-1}).then( item =>{
+	    modelUser.find().sort({_id:-1}).then( item =>{
 
             return res.status(200).json(item)
 
@@ -140,7 +146,7 @@ const update=(req,res,next)=> {
 
 	    	  	     	 bcrypt.hash(data.password,salt).then(hash=> {
 
-				          User.updateOne({_id:data._id},{$set:{...data,cloud_id:result.public_id,imageUrl:result.url,password:hash}})
+				          modelUser.updateOne({_id:data._id},{$set:{...data,cloud_id:result.public_id,imageUrl:result.url,password:hash}})
 						    .then(item => {
 
 						        return  res.status(200).json({message:"Mise à jour a été éffectuée"}) 
@@ -159,7 +165,7 @@ const update=(req,res,next)=> {
 
 	        bcrypt.hash(data.password,salt).then(hash=> {
 
-	          User.updateOne({_id:data._id},{$set:{...data,password:hash}})
+	          modelUser.updateOne({_id:data._id},{$set:{...data,password:hash}})
 			    .then(item =>{
 
 			        return  res.status(200).json({message:"Mise à jour a été éffectuée"}) 
@@ -174,25 +180,58 @@ const update=(req,res,next)=> {
 
 
 const search=(req,res,next)=>{
-	    
-	    articles.find({fullName:req.params.fullName}).sort({fullName:-1}).then((item)=>{
+
+	   modelUser.find({fullName:req.params.fullName}).sort({fullName:-1}).then((item)=>{
 	        res.status(200).json(item)
 
         }).catch( e => res.status(404).json(e.message) )
 };
 
 
-const destroy=(req,res,next)=>  {
-          
-        const {cloud_id,_id}=req.params.data;
+const destroy=(req,res,next)=>{
 
-	    User.deleteOne({_id:id}).then(item=> {
-	    	 	 
-	    	 	  destroy_cloud(cloud_id)
-	  	          return res.status(200).json('utilisateur a été supprimé');
+	const {id}=req.params;
+	modelUser.findOne({_id:id})
+   .then(item=>{
+			 destroy_cloud(item.cloud_id)
+		   modelUser.deleteOne({_id:id})
+		 .then(x=>{
+			   return  res.status(200).json('Compte a été supprimé')
 
-	    }).catch(e=> res.status(404).json(e.message))
+		 }).catch(e=> res.status(404).json(e.message))
+
+   }).catch(e=> res.status(404).json(e.message))
+
+};
+
+const deni=(req,res,next)=>{
+	
+	const {id}=req.params;
+	modelUser.findOne({_id:id})
+   .then(item=>{
+			 const msg=item.deni? 'Utilisateur Bloqué': 'Utilisateur Debloqué';
+		    modelUser.updateOne({_id:id},{$set:{deni:!item.deni}})
+		 .then(x=>{
+			   return  res.status(200).json(msg)
+		 }).catch(e=> res.status(404).json(e.message))
+
+   }).catch(e=> res.status(404).json(e.message))
+};
+
+const deconnexion=(req,res,next)=>{
+	const {id}=req.params;
+	modelUser.findOne({_id:id})
+   .then(item=>{
+
+	     modelUser.updateOne({_id:id},{$set:{connexion:false}})
+		 .then(x=>{
+			   return  res.status(200).json(true)
+		 }).catch(e=> res.status(404).json(e.message))
+
+   }).catch(e=> res.status(404).json(e.message))
+	   
 }
+
 
 module.exports={
 
@@ -202,7 +241,9 @@ module.exports={
 	    update:update,
 	    view:view,
 	    search:search,
-	    destroy:destroy
+	    destroy:destroy,
+		deni:deni,
+		deconnexion:deconnexion
 };
 
 

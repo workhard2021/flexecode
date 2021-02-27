@@ -50,6 +50,7 @@ const auth=(req,res,next)=>{
 	    	   const idUser=req.body.idUser;
 	     	   const authri=req.headers.authorization.split(' ')[1];
                const token=jwt.verify(authri,'SECRTE_JWT');
+			   
 
                if(idUser!==token.idUser){
                	   res.status()
@@ -58,7 +59,7 @@ const auth=(req,res,next)=>{
                }
 	     }
 	     catch(e){ 
-
+			  console.log(req.headers)
 	     	  res.status(201).json('Veuillez vous connecter')
 	     }
 	     
