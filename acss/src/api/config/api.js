@@ -62,7 +62,6 @@ export const view= async(url)=>{
 export const create= async (data_,url)=>{
 	        
 	        let error=false;
-
 		    try{
 		        	const res= await axios({
 					            url:PARAMS_CONFIG.URI+url,
@@ -72,7 +71,6 @@ export const create= async (data_,url)=>{
 				        	 });
 
 		            const data=await res.data;
-					console.log(data)
 
 	        	   if(res.status===404){
 

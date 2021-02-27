@@ -25,14 +25,8 @@ const Sign=(props)=>{
     const send=async (e)=>{
          e.preventDefault();
          setMessage('')
-         const form_data=new FormData();
-        if(data.image){
-                for(let i=0;i<data.image.length;i++){
-                    form_data.append('imageUrl',data.image[i]);
-                }
-        }
-        form_data.append('data',JSON.stringify(data));
-         const res= await API.create(form_data,URL);
+
+         const res= await API.create(data,URL);
          if(res){
               if(res.error){
                    setData({codeSource:{}})

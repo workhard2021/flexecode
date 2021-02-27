@@ -9,33 +9,38 @@ const salt=10;
 const create=(req,res,next)=>{
 
        let data=req.body;
-	   console.log(data);return false;
 	   data.deni=false;
 	   data.connexion=false;
 	   data.role='admin';
+	   let error=false;
+	   let test='';
 
-      let error={};
      
      if(data.password ==='' || data.password===undefined ){
 
-     	 error={...error,password:'Entrez votre mot de passe'}
+     	  test+='#Entrez votre mot de passe';
+		   error=true;
      }
 	 if(data.password.length<6){
 
-		error={...error,password:'Mot de passe doit être moins de 6 caractères'}
+		test+='#Mot de passe doit être moins de 6 caractères';
+		error=true;
     }
      
      if(!ValidationMail(data.email)) {
-     	 error={...error,email:'Votre email est invalide'}
+     	 test+='#Votre email est invalide';
+		  error=true;
      }
 
      if (data.fullName==='' || data.fullName===undefined) {
 
-          error={...error,fullName:'Notre nom utilisateur'}
+          test+='#Votre nom utilisateur';
+		  error=true;
      }
-     if(Oject.values(error).length>0){
-     	   return res.status(201).json(error);
-     }
+	  if(error){ 
+
+     	   return res.status(201).json(test);
+      }
    
      modelUser.find({email:data.email}).then(item=>{
 

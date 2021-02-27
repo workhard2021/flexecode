@@ -85,26 +85,26 @@ const update=(req,res,next)=>{
     const text='Veuillez remplir le champ:';
 
         if( data.title ==='' || data.title ===undefined) {
-               error.title='titre';
+               error.title='#titre';
               
        }
         if( data.comment ==='' || data.comment ===undefined) {
-             error.comment='commentaire';
+             error.comment='#commentaire';
        }
         if( data.categorie ==='' || data.categorie ===undefined) {
                 error.categorie='categorie';    
        }
        if( data.linkYoutube ==='' || data.linkYoutube ===undefined) {
-                error.categorie='lien youtube'; 
+                error.categorie='#lien youtube'; 
        }
        if( data.linkGithub ==='' || data.linkGithub ===undefined) {
-               error.categorie='lien github';
+               error.categorie='#lien github';
        }
 
        for(let key in error){
              test+=' '+error[key];      
        }
-      if(Object.values(error).length>0){
+       if(Object.values(error).length>0){
            return res.status(201).json(text+test);
        }
 

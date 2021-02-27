@@ -8,8 +8,6 @@ const {auth,multer_}=require('../middleware/middleware');
 //parsse html form
 const urlencoded=bodyParser.urlencoded({ extended: false })
 
-
-
 routeUser.post('/sign/',bodyParser.json(),userCtl.create);
 routeUser.post('/update/',auth,multer_.array('image',1),userCtl.update);
 routeUser.put('/login/:id',auth,bodyParser.json(),userCtl.connexion);
