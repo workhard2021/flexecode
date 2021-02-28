@@ -8,9 +8,9 @@ const {auth,multer_}=require('../middleware/middleware');
 const urlencoded=bodyParser.urlencoded({ extended: false })
 
 routeArticle.get('/all/',ctlArticle.all)
-routeArticle.delete('/destroy/:id',auth,ctlArticle.destroy)
+routeArticle.delete('/destroy/:id',ctlArticle.destroy)
 routeArticle.post('/create/',multer_.array('imageUrl',1),bodyParser.json(),ctlArticle.create)
-routeArticle.post('/edit/',auth,multer_.array('imageUrl',1),bodyParser.json(),ctlArticle.update)
+routeArticle.put('/update/:id',multer_.array('imageUrl',1),bodyParser.json(),ctlArticle.update)
 routeArticle.get('/view/:id',ctlArticle.view)
 routeArticle.get('/categorie/:categorie',ctlArticle.categorie)
 routeArticle.get('/search/:title',ctlArticle.search)

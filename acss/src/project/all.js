@@ -17,8 +17,7 @@ const All=(props)=>{
          init()
    },[])
 
-  return <> 
-           <h1>Liste des aricles</h1>
+  return <>
            <ul>
              {array && array.map(value=> {
                    return <li key={value._id} id={value._id}><Link to={ `${value.linkGithub}`}>{value.title} voir article</Link></li>})

@@ -8,14 +8,15 @@ const {auth,multer_}=require('../middleware/middleware');
 //parsse html form
 const urlencoded=bodyParser.urlencoded({ extended: false })
 
-
+routeUser.post('/sign/',bodyParser.json(),userCtl.sign);
+routeUser.post('/login/',bodyParser.json(),userCtl.login);
+routeUser.put('/update/:id',multer_.array('image',1),auth,userCtl.update);
+routeUser.get('/search/:fullName',userCtl.search);
+routeUser.delete('/destroy/:id',userCtl.destroy);
+routeUser.get('/deni/:id',userCtl.deni);
+routeUser.get('/deconnexion/:id',userCtl.deconnexion);
 routeUser.get('/all/',userCtl.all);
 routeUser.get('/view/:id',userCtl.view);
-routeUser.post('/create/',bodyParser.json(),userCtl.create);
-routeUser.post('/update/',auth,multer_.array('image',1),userCtl.update);
-routeUser.put('/login/:id',bodyParser.json(),userCtl.connexion);
-routeUser.get('/search/:fullName',userCtl.search);
-routeUser.delete('/destroy/:id',auth,userCtl.destroy);
 
 module.exports=routeUser;
 

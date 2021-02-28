@@ -1,5 +1,5 @@
 const fs=require('fs');
-const {modelArticle}=require('../model/model');
+const {modelArticle,modelCommentaire}=require('../model/model');
 const {ValidationMail,upload,destroy_cloud}=require('../middleware/middleware');
 
 const all=(req,res,next)=> {
@@ -25,33 +25,33 @@ const all=(req,res,next)=> {
  const create=(req,res,next)=>{   
     const data=JSON.parse(req.body.data);
 
-    const files=req.files;
-    let error={};
-    let a=' '
-    const text='Veuillez remplir le champ:';
+        const files=req.files;
+       let error={};
+       let test=' '
+        const text='Veuillez remplir le champ:';
 
-     if( data.title ==='' || data.title ===undefined) {
+        if( data.title ==='' || data.title ===undefined) {
                error.title='titre';
               
-     }
-     if( data.comment ==='' || data.comment ===undefined) {
+       }
+        if( data.comment ==='' || data.comment ===undefined) {
              error.comment='commentaire';
-     }
-     if( data.categorie ==='' || data.categorie ===undefined) {
+       }
+        if( data.categorie ==='' || data.categorie ===undefined) {
                 error.categorie='categorie';    
-      }
-      if( data.linkYoutube ==='' || data.linkYoutube ===undefined) {
+       }
+       if( data.linkYoutube ==='' || data.linkYoutube ===undefined) {
                 error.categorie='lien youtube'; 
-      }
-      if( data.linkGithub ==='' || data.linkGithub ===undefined) {
+       }
+       if( data.linkGithub ==='' || data.linkGithub ===undefined) {
                error.categorie='lien github';
-      }
+       }
 
        for(let key in error){
-             a+=' '+error[key];      
+             test+=' '+error[key];      
        }
       if(Object.values(error).length>0){
-           return res.status(201).json(text+a);
+           return res.status(201).json(text+test);
        }
       
       if(files.length>0) {
@@ -77,21 +77,44 @@ const all=(req,res,next)=> {
  };
  
 const update=(req,res,next)=>{   
-    const data=req.body;
+    const data=JSON.parse(req.body.data);
     const files=req.files;
+    const id=req.params.id;
+    let error={};
+    let test=' '
+    const text='Veuillez remplir le champ:';
 
-    if( (data.title !=='' && data.comment && data.categorie !=='') &&
-        (data.title !==undefined && data.comment!==undefined &&
-                data.categorie !==undefined)) { 
-     
+        if( data.title ==='' || data.title ===undefined) {
+               error.title='#titre';
+              
+       }
+        if( data.comment ==='' || data.comment ===undefined) {
+             error.comment='#commentaire';
+       }
+        if( data.categorie ==='' || data.categorie ===undefined) {
+                error.categorie='categorie';    
+       }
+       if( data.linkYoutube ==='' || data.linkYoutube ===undefined) {
+                error.categorie='#lien youtube'; 
+       }
+       if( data.linkGithub ==='' || data.linkGithub ===undefined) {
+               error.categorie='#lien github';
+       }
+
+       for(let key in error){
+             test+=' '+error[key];      
+       }
+       if(Object.values(error).length>0){
+           return res.status(201).json(text+test);
+       }
+
       if(files.length>0) {
-              const {path}=file;
-              for(let file of files){
 
+              for(let file of files){
+                   const {path}=file;
                    upload(path,'image').then(result=>{
                        destroy_cloud(data.cloud_id)
-
-                       modelArticle.insertMany({...data,cloud_id:result.public_id,imageUrl:result.url,dateInsert:Date.now()})
+                       modelArticle.updateOne({_id:id},{...data,cloud_id:result.public_id,imageUrl:result.url,dateInsert:Date.now()})
                        .then(item=>{
                           res.status(200).json('Mise à jour a été effectuée')
                        }).catch(e=> res.status(404).json(e.message))
@@ -100,40 +123,31 @@ const update=(req,res,next)=>{
               } 
               
       }else{
-               modelArticle.insertMany({...data,imageUrl:'a.jpg',dateInsert:Date.now()})
+               modelArticle.updateOne({_id:id},{...data,imageUrl:'a.jpg',dateInsert:Date.now()})
                        .then(item=>{
                           res.status(200).json('Mise à jour a été effectuée')
                }).catch(e=> res.status(404).json(e.message))
       }
-
-    }else {
-             return res.status(201).json('Veuillez remplir tout les champs');
-    }
    
  };
 
 
 const destroy=(req,res,next)=>{
- 	    modelArticle.findOne({_id:req.params.id})
- 	    .then(item=>{
+     
+        const {id}=req.params;
+        modelArticle.findOne({_id:id})
+       .then(item=>{
+                 destroy_cloud(item.cloud_id)
+  	         modelArticle.deleteOne({_id:id})
+ 	        .then(x=>{
+                      modelCommentaire.deleteMany({idArticle:id}).
+                      then(y=>{
+                         res.status(200).json('Article a été supprimé')
+                    }).catch(e=> res.status(404).json(e.message))
 
-  	         modelArticle.deleteOne({_id:req.params.id})
- 	        .then(item=>{
-                   destroy_cloud(item.cloud_id)
-       //suprimer tout les commentaires qui correspondent a cet article:identifiant(id)
-         modelCommentaire.deleteMany({_id:req.params.id}).
-        then(item=>{
-          modelCommentaireCommenter.deleteMany({idCommentaire:req.params.id}).
-          then(item=>{
-          res.status(200).json('Article a été supprimé')
-          }).catch(e=> res.status(404).json(e.message))
- 
-        }).catch(e=> res.status(404).json(e.message))
-       //suprimer tout les commentaires qui correspondent a cet article:identifiant(id)
+                 }).catch(e=> res.status(404).json(e.message))
 
- 	        }).catch(e=> res.status(404).json(e.message))
-
- 	    }).catch(e=> res.status(404).json({message:e}))
+       }).catch(e=> res.status(404).json(e.message))
 
  };
 

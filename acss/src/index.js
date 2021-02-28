@@ -1,10 +1,14 @@
 import React from 'react';
 import ReactDom from 'react-dom';
-import Article from './article/article';
+
+import User from './user/user';
 
 const App=(props)=>{
 	    
-	    return <Article/>
+	    return <>
+		            <User/>
+		         
+		       </>
 }
 
 ReactDom.render(<App/>,document.getElementById('root'))

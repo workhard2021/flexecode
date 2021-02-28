@@ -44,23 +44,28 @@ function ValidationMail(email)
 
 
 const auth=(req,res,next)=>{
+      const TOKEN_SECRET=req.headers.authorization;
+	  const USER=req.body? JSON.parse(req.body.data):null; 
+	  const fullName=USER? USER.fullName:null;
 
-	    try {  
+	  jwt.verify(TOKEN_SECRET,fullName,(error,decoded)=>{
+                 
+		      if(error) {
+				      res.status(201).json('Veuillez vous connnecter')
+			  }else {
+				     if(decoded.idUser!==USER._id) {
 
-	    	   const idUser=req.body.idUser;
-	     	   const authri=req.headers.authorization.split(' ')[1];
-               const token=jwt.verify(authri,'SECRTE_JWT');
+						   res.status(201).json('Veuillez vous connnecter');
 
-               if(idUser!==token.idUser){
-               	   res.status()
-               }else{
-               	  next()
-               }
-	     }
-	     catch(e){ 
+					 }else {
+						 
+						next(); 
+					 }
+				   
+			  }
+	  })
 
-	     	  res.status(201).json('Veuillez vous connecter')
-	     }
+
 	     
 }
 

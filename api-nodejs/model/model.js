@@ -31,7 +31,10 @@ const userSchema= new mongoose.Schema({
 	     email:{type:String,required:true,unique:true},
 	     dateInsert:{type:Date,Default:Date.now()},
 	     role:{type:String,Default:'user'},
-	     comment:{type:String}
+	     comment:{type:String},
+		 linkGithub:{type:String},
+		 deni:{type:Boolean},
+		 connexion:{type:Boolean}
 	 });
 
 const  modelUser = new mongoose.model('user',userSchema);
@@ -49,11 +52,12 @@ const modelCommentaire= new mongoose.model('commentaire',commentaireSchema);
 
 const projectSchema=mongoose.Schema({
 	     title:{type:String,required:true},
-	     comment:{type:String,required:true},
-	     imageUser:{type:String},
-	     categorie:{type:String},
+	     comment:{type:String},
+	     idUser:{type:String,required:true},
+	     categorie:{type:String,required:true},
 		 cloud_id:{type:String},
-	     link:{type:String},
+		 imageUrl:{type:String},
+	     linkGithub:{type:String},
 	     dateInsert:{type:Date,Default:Date.now()}   
 });
 
