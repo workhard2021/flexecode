@@ -18,7 +18,8 @@ const Project=(props)=>{
 				   <Route exact path='/user/update/:id' render={(props)=> (<Update {...props}/>)}/>
 				   <Route exact path='/user/sign/' render={(props)=> (<Sign {...props}/>)}/>
 				   <Route exact path='/user/login/' render={(props)=> (<Login {...props}/>)}/>
-                  
+				
+             
 				   <Route exact path='/user/user-menager/' render={(props)=> (<MenagerUser {...props}/>)}/>
 
 				 </Switch>

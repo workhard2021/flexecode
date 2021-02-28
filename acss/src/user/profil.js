@@ -1,11 +1,12 @@
 import React,{useEffect,useCallback,useState} from 'react';
-import {Link,useParams} from 'react-router-dom';
+import {Link,useParams,useHistory} from 'react-router-dom';
 import * as API from '../api/config/api';
 const Profil  =(props)=>{
 
           const {id}=useParams();
           const URL=`/user/view/${id}`;
           const [view,setView]=useState(null)
+          const history=useHistory();
 
           const init =useCallback(  async()=>{
                const res= await  API.view(URL);
@@ -20,6 +21,22 @@ const Profil  =(props)=>{
                       console.warn('Actualiser la page')
                }
           },[URL])
+          const deconnexion= async(x)=>{
+           
+               const res= await API.deconnexion(`/user/deconnexion/${x}`);
+               console.warn(res.data)
+                if(res){
+                        if(res.data){
+                               localStorage.clear(); 
+                        }
+                      //  history.push('/article');
+                      
+                       
+                }else{
+                    console.warn(res.data,'__s')
+                    // history.push('/article');
+                }
+          }
 
           useEffect(()=>{
                 init()
@@ -30,7 +47,8 @@ const Profil  =(props)=>{
           return <>
                     <ul>
                     <Link to='/user/'>HOME USER</Link>
-                      <li><Link to={ `/user/update/${view._id}`}>{view.fullName}</Link></li>
+                      <li><Link to={ `/user/update/${view._id}`}>{view.fullName} update</Link></li>
+                      <li><button onClick={()=>deconnexion(view._id)}>Deconnexion</button></li>
                       <li><Link>{view.dateInsert}</Link></li>
                       <li><Link>{view.email}</Link></li>
                     </ul>  

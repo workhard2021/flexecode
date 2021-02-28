@@ -235,9 +235,9 @@ const deconnexion=(req,res,next)=>{
 	const {id}=req.params;
 	modelUser.findOne({_id:id})
    .then(item=>{
-
 	     modelUser.updateOne({_id:id},{$set:{connexion:false}})
 		 .then(x=>{
+			     console.log(x)
 			   return  res.status(200).json(true)
 		 }).catch(e=> res.status(404).json(e.message))
 

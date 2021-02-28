@@ -178,6 +178,37 @@ export const login=async(data_,url)=>{
 	        }
 }
 
+export const deconnexion=async(url)=>{
+	let error=false;
+	
+	try{
+		   const res= await axios({
+						  url:PARAMS_CONFIG.URI+url,
+						  method:'get',
+						  headers:PARAMS_CONFIG.HEADERS
+					
+				   });
+
+		   const data = await res.data;
+		  
+
+		   if(res.status===404){
+					 throw new Error(data)
+
+		   }else if(res.status===201){
+				   
+					  return  {error:error,data:data}; 
+		   }else {
+					
+					return  {error:!error,data:data}; 
+		   }
+   }
+   catch(e){
+	console.warn(e)
+		 return e
+   }
+}
+
 
 export const URIAPI=PARAMS_CONFIG.URI;
 
