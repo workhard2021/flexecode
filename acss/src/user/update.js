@@ -35,6 +35,7 @@ const Update=(props)=>{
                 }
         }
         form_data.append('data',JSON.stringify(data));
+    
          const res= await API.update(form_data,URLUPDATE);
          if(res){
               if(res.error){
@@ -57,6 +58,7 @@ const Update=(props)=>{
             const res= await API.view(URL);
             if(res){
                    if(res.error){
+                         delete res.data.password;
                     setData(state=>{ return {...state,...res.data} });
                 }else{
                          setMessage(res.data)

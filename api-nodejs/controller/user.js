@@ -11,7 +11,7 @@ const create=(req,res,next)=>{
        let data=req.body;
 	   data.deni=false;
 	   data.connexion=false;
-	   data.role='admin';
+	   data.role='user';
 	   let error=false;
 	   let test='';
 
@@ -41,6 +41,7 @@ const create=(req,res,next)=>{
 
      	   return res.status(201).json(test);
       }
+	  
    
      modelUser.find({email:data.email}).then(item=>{
 
@@ -53,8 +54,8 @@ const create=(req,res,next)=>{
 
 		     	   modelUser.insertMany({...data,password,imageUrl:'a.jpg',dataInsert:Date.now})
 		     	   .then(item=> {
-
-				        res.status(200).json('Profil a été crée')
+                      
+				      return  res.status(200).json('Profil a été crée')
 
 				   }).catch(e=> res.status(404).json(e.message))
 		     })
@@ -76,19 +77,26 @@ const connexion=(req,res,next)=>{
 	 modelUser.findOne({email:data.email}).then((item)=>{
 	
 	    if(item!==null) { 
-	    	  
+			
 	    	    bcrypt.compare(data.password,item.password)
 			    .then(valid=> {
-
+					
 			  	   if(valid) {
-		              
-		                   jwt.sign({idUser:item._id},'SECRTE_JWT',{expiresIn:'1h'},(error,token)=>{
+				           const TOKEN_SECRET=item._doc.fullName;
+		                   jwt.sign({idUser:item._id},TOKEN_SECRET,{expiresIn:'1h'},(error,token)=>{
+							   
 		                	   if(error){
-		                	   	   res.status(201).json("Email ou mot de passe est incorrecte")
+								   
+		                	   	  return res.status(201).json("Email ou mot de passe est incorrecte")
 		                	   }
 		                	   else{
-		                            delete user.password;
-		                	   	    res.status(200).json({...item,token:token})
+								    
+								   modelUser.updateOne({_id:item._doc._id},{$set:{connexion:true}})
+								   .then(c=>{
+									    delete item._doc.password;
+									   return  res.status(200).json({...item._doc,connexion:true,token:token})
+								   }).catch(e=>res.status(404).json(e))
+		                           
 		                	   }
 		                });
 
@@ -129,7 +137,7 @@ const all= (req,res,next)=>{
 
 const update=(req,res,next)=> {
        
-    let data=JSON.parse(req.body.data);
+    let data=JSON.parse(req.body.data);	
     const files=req.files;
 
     if(!ValidationMail(data.email)) { 

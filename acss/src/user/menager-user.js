@@ -1,5 +1,5 @@
 import React,{useState,useEffect, useCallback} from 'react';
-import {Link, useParams} from 'react-router-dom';
+import {Link} from 'react-router-dom';
 import * as API from '../api/config/api';
 
 const MenagerUser=(props)=>{

@@ -1,10 +1,12 @@
-import React,{useState,useRef} from 'react';
+import React,{useState} from 'react';
+import {useHistory} from 'react-router-dom';
 import * as API from '../api/config/api';
 const Login=(props)=>{
     const [data,setData]=useState({});
-    const [success,setSuccess]=useState(false);
+
     const [message,setMessage]=useState('');
-    const inputRefFile=useRef(null);
+   
+    const history=useHistory();
     const URL='/user/login/';
    
     const saisir=(e)=>{
@@ -24,23 +26,12 @@ const Login=(props)=>{
     const send=async (e)=>{
          e.preventDefault();
          setMessage('')
-         const form_data=new FormData();
-        if(data.image){
-                for(let i=0;i<data.image.length;i++){
-                    form_data.append('imageUrl',data.image[i]);
-                }
-        }
-        form_data.append('data',JSON.stringify(data));
-         const res= await API.create(form_data,URL);
+         const res= await API.login(data,URL);
          if(res){
               if(res.error){
-                   setData({codeSource:{}})
-                   setMessage(res.data)
-                   if(inputRefFile.current){
-                        inputRefFile.current.value=null;
-                   }
-                   setSuccess(true)
-
+                    setData({codeSource:{}})
+                    localStorage.setItem('user',JSON.stringify(res.data))
+                    history.push('/article');
               }else{
                   setMessage(res.data)
               }
@@ -52,7 +43,7 @@ const Login=(props)=>{
     
 
     return <form onSubmit={(e)=>send(e)}>
-              {message &&  <div className={success? 'valide':'invalid'}> {message}</div>}
+              {message &&  <div className='invalid'> {message}</div>}
     
               <table>
                 <tbody>

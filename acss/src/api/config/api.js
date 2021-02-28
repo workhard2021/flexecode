@@ -120,11 +120,8 @@ export const destroy= async(url)=>{
 }
 
 export const update=async(data_,url)=>{
-	            
+
 	         const error=false;
-
-             PARAMS_CONFIG.HEADERS.autorization=data_.token;
-
 		     try{
 		        	const res= await axios({
 		          	             url:PARAMS_CONFIG.URI+url,
