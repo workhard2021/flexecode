@@ -32,7 +32,7 @@ export const all= async(url)=>{
 
 export const view= async(url)=>{
 	        let error=false;
-
+		
 	        try{
 	        	    const res= await fetch(PARAMS_CONFIG.URI+url,{
 			        	 	method:'get',
@@ -178,22 +178,20 @@ export const login=async(data_,url)=>{
 	        }
 }
 
-export const deconnexion=async(url)=>{
+export const deconnexionDeni= async (url)=>{
 	let error=false;
-	
-	try{
-		   const res= await axios({
-						  url:PARAMS_CONFIG.URI+url,
-						  method:'get',
-						  headers:PARAMS_CONFIG.HEADERS
-					
-				   });
 
-		   const data = await res.data;
+	try{
+		   const res= await fetch(PARAMS_CONFIG.URI+url,{
+			               method:'get',
+						   headers:PARAMS_CONFIG.HEADERS
+		   })
+			
+		   const data = await res.json();
 		  
 
 		   if(res.status===404){
-					 throw new Error(data)
+					 console.warn(res)
 
 		   }else if(res.status===201){
 				   
@@ -204,7 +202,7 @@ export const deconnexion=async(url)=>{
 		   }
    }
    catch(e){
-	console.warn(e)
+
 		 return e
    }
 }

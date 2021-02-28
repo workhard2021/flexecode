@@ -36,7 +36,7 @@ const MenagerUser=(props)=>{
    }
    const deni= async(id)=>{
             const URL=`/user/deni/${id}`
-           const res= await API.view(URL);
+           const res= await API.deconnexionDeni(URL);
            if(res.error){
                    setMessage(res.data)
                    setSuccess(true)
@@ -50,7 +50,7 @@ const MenagerUser=(props)=>{
           setUp(true);
           init()
          return ()=>setUp(false)
-   },[up,success,message,init])
+   },[up,success,array,message,init])
    
      if(!up){
            return null
@@ -72,7 +72,7 @@ return <section>
                           <li>{value.email}</li>
                           <li> <Link to={`/user/profil/${value._id}`}>{value.fullName} voir profil </Link></li>
                           <li><button onClick={(e)=>destroy(value._id)}>Delete</button></li>
-                          {/*<li><button onClick={(e)=>deni(value._id)}>{deni? 'Bloqué':'Debloqué'}</button></li>*/}
+                          <li><button onClick={(e)=>deni(value._id)}>{value.deni? 'Bloquer':'Debloquer'}</button></li>
                          </React.Fragment>})
              }
            </ul>  

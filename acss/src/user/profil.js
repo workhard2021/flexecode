@@ -23,18 +23,18 @@ const Profil  =(props)=>{
           },[URL])
           const deconnexion= async(x)=>{
            
-               const res= await API.deconnexion(`/user/deconnexion/${x}`);
-               console.warn(res.data)
+               const res= await API.deconnexionDeni(`/user/deconnexion/${x}`);
+               
                 if(res){
                         if(res.data){
                                localStorage.clear(); 
                         }
-                      //  history.push('/article');
-                      
+                         history.push('/article');
+                    
                        
                 }else{
-                    console.warn(res.data,'__s')
-                    // history.push('/article');
+                    
+                     history.push('/article');
                 }
           }
 

@@ -39,10 +39,11 @@ const Update=(props)=>{
          const res= await API.update(form_data,URLUPDATE);
          if(res){
               if(res.error){
-                   setMessage(res.data)
+                   setMessage(res.data.message)
                    if(inputRefFile.current){
                         inputRefFile.current.value=null;
                    }
+                   localStorage.setItem('user',JSON.stringify(res.data.user))
                    setSuccess(true)
 
               }else{

@@ -6,7 +6,7 @@ const bcrypt =require('bcrypt');
 const jwt = require('jsonwebtoken');
 const salt=10;
 
-const create=(req,res,next)=>{
+const sign=(req,res,next)=>{
 
        let data=req.body;
 	   data.deni=false;
@@ -65,7 +65,7 @@ const create=(req,res,next)=>{
       }).catch(e=>res.status(404).json(e.message))
 };
 
-const connexion=(req,res,next)=>{
+const login=(req,res,next)=>{
 
        let data=req.body;
 
@@ -83,7 +83,8 @@ const connexion=(req,res,next)=>{
 					
 			  	   if(valid) {
 				           const TOKEN_SECRET=item._doc.fullName;
-		                   jwt.sign({idUser:item._id},TOKEN_SECRET,{expiresIn:'1h'},(error,token)=>{
+						   
+		                   jwt.sign({idUser:item._doc._id},TOKEN_SECRET,{expiresIn:'1h'},(error,token)=>{
 							   
 		                	   if(error){
 								   
@@ -139,16 +140,22 @@ const update=(req,res,next)=> {
        
     let data=JSON.parse(req.body.data);	
     const files=req.files;
-
+	const token=jwt.sign({idUser:data._id},data.fullName,{expiresIn:'1h'});
+	const user={...data,token:token}
+	
     if(!ValidationMail(data.email)) { 
 
     	  return  res.status(201).json({message:'Email est invalide'})
     }
+   
+	if(data.password) { 
 
-    if(data.password.length>0 && data.password<=6){
+          if(data.password.length>0 && data.password<=6){
 
-    	 return res.status(201).json('Le mot de passe doit être superieur 5 caractères')
+    	      return res.status(201).json('Le mot de passe doit être superieur 5 caractères')
+        }
     }
+
 
     if(files.length>0) {
 
@@ -156,17 +163,30 @@ const update=(req,res,next)=> {
 
     	  	     const {path}=file;
     	  	     upload(path,(result)=> {
-
+                       if(data.password){
+							    
 	    	  	     	 bcrypt.hash(data.password,salt).then(hash=> {
 
-				          modelUser.updateOne({_id:data._id},{$set:{...data,cloud_id:result.public_id,imageUrl:result.url,password:hash}})
-						    .then(item => {
+							modelUser.updateOne({_id:data._id},{$set:{...data,cloud_id:result.public_id,imageUrl:result.url,password:hash}})
+							  .then(item => {
+                                          delete user.password;
+										  delete user.password2;
+								  return  res.status(200).json({message:'Mise à jour a été effectuéé',user:user}) 
+   
+							  }).catch(e=> res.status(404).json(e.message))
+  
+						  }).catch(e=> res.status(404).json(e.message))
+					   
+						}else{
 
-						        return  res.status(200).json({message:"Mise à jour a été éffectuée"}) 
- 
-						    }).catch(e=> res.status(404).json(e.message))
-
-				        }).catch(e=> res.status(404).json(e.message))
+							modelUser.updateOne({_id:data._id},{$set:{...data,cloud_id:result.public_id,imageUrl:result.url,password:hash}})
+							  .then(item => {
+								       delete user.password;
+								       delete user.password2;
+								  return  res.status(200).json({message:"Mise à jour a été éffectuée",user:user}) 
+   
+							  }).catch(e=> res.status(404).json(e.message))							  
+						}
 	                  
     	  	     })
 			     destroy_cloud(data.cloud_id)
@@ -175,17 +195,34 @@ const update=(req,res,next)=> {
 
 
     }else {
+		     
+		 
+		   if(data.password){
+		     	bcrypt.hash(data.password,salt).then(hash=> {
 
-	        bcrypt.hash(data.password,salt).then(hash=> {
+				modelUser.updateOne({_id:data._id},{$set:{...data,password:hash}})
+				  .then(item =>{
+					         delete user.password;
+					        delete user.password2;
+					  return  res.status(200).json({message:"Mise à jour a été éffectuée",user:user}) 
+					 
+				  }).catch(e=> res.status(404).json(e.message))
+  
+			  }).catch(e=> res.status(404).json(e.message))
 
-	          modelUser.updateOne({_id:data._id},{$set:{...data,password:hash}})
-			    .then(item =>{
+		   }else{
 
-			        return  res.status(200).json({message:"Mise à jour a été éffectuée"}) 
-			       
-			    }).catch(e=> res.status(404).json(e.message))
+				  modelUser.updateOne({_id:data._id},{$set:{...data}})
+				  .then(item =>{
+					         delete user.password;
+				          	delete user.password2;
+					  return  res.status(200).json({message:"Mise à jour a été éffectuée",user:user}) 
+					 
+				  }).catch(e=> res.status(404).json(e.message))
 
-	        }).catch(e=> res.status(404).json(e.message))
+		   }
+
+	       
     } 
 
 }
@@ -204,6 +241,7 @@ const search=(req,res,next)=>{
 const destroy=(req,res,next)=>{
 
 	const {id}=req.params;
+	
 	modelUser.findOne({_id:id})
    .then(item=>{
 			 destroy_cloud(item.cloud_id)
@@ -237,7 +275,6 @@ const deconnexion=(req,res,next)=>{
    .then(item=>{
 	     modelUser.updateOne({_id:id},{$set:{connexion:false}})
 		 .then(x=>{
-			     console.log(x)
 			   return  res.status(200).json(true)
 		 }).catch(e=> res.status(404).json(e.message))
 
@@ -245,11 +282,10 @@ const deconnexion=(req,res,next)=>{
 	   
 }
 
-
 module.exports={
 
-	    create:create,
-	    connexion:connexion,
+	    sign:sign,
+	    login:login,
 	    all:all,
 	    update:update,
 	    view:view,
