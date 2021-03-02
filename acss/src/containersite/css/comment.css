@@ -1,0 +1,124 @@
+.comment{
+     display:flex;
+     justify-content:flex-start;
+     flex-direction:column;
+     align-items:center;
+     width:100%;
+     font-family:sans-serif;
+     background-color: whitesmoke;
+}
+.comment #item{
+      position:relative;
+      display:flex;
+      justify-content:flex-start;
+      flex-direction:column;
+      width:90%;
+      flex-shrink:2;
+      padding:10px;
+      box-sizing:border-box;
+      background-color:white;
+      border-bottom:1px solid rgb(199, 146, 146);
+}
+.comment #item #author{
+    position:relative;
+    width:100%;
+    padding:10px;
+}
+.comment #item #author img{
+     width:55px;
+     height:55px;
+     border-radius:50%;
+}
+.comment #item #author span{
+      color:grey;
+      font-size:1em;
+      padding:5px;
+}
+.comment #item #author span:nth-child(2){
+    font-weight:bold;
+    color:black;
+}
+.comment #item p{
+      position:relative;
+      font-size:1em;
+      color:grey;
+      padding:10px;
+      width:70%;
+      box-sizing:border-box;
+      text-align:justify;
+      border-radius:3px;
+}
+.comment .btn{
+    display:flex;
+    justify-content:flex-start;
+    align-items:center;
+    padding:10px;
+    width:30%;
+}
+.comment .btn a{
+     text-decoration:none;
+     color:black;
+}
+.comment .btn span{
+    font-size:1.2em; 
+    cursor: pointer; 
+    padding:10px;
+    opacity:0.7;
+    flex-grow:2;
+}
+.comment .btn *:hover{
+     opacity:1;
+     color:blue;
+}
+.comment .btn .like{
+     opacity:1;
+     color:rgb(139, 222, 233);
+}
+
+.comment #item-dot{
+    position:relative;
+    display:flex;
+    justify-content:flex-start;
+    flex-direction:column;
+    width:90%;
+    flex-shrink:2;
+    padding:10px 30px;
+    box-sizing:border-box;
+    /* border-top:1px solid rgb(199, 146, 146); */
+ 
+}
+.comment #item-dot #author{
+  position:relative;
+  width:100%;
+  padding:10px;
+}
+.comment #item-dot #author img{
+   width:45px;
+   height:45px;
+   border-radius:50%;
+}
+.comment #item-dot #author span{
+    color:grey;
+    font-size:0.9em;
+    padding:5px;
+}
+.comment #item-dot #author span:nth-child(2){
+  font-weight:bold;
+  color:black;
+}
+.comment #item-dot p{
+    position:relative;
+    font-size:0.9em;
+    color:grey;
+    width:70%;
+    box-sizing:border-box;
+    text-align:justify;
+   
+}
+@media screen and (max-width:980px){
+    .comment #item p{
+        position:relative;
+        width:100%;
+
+   }
+}

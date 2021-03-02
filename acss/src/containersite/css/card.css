@@ -1,0 +1,116 @@
+.card{
+     display: flex;
+     justify-content:space-evenly;
+     flex-direction:row;
+     width:100%;
+    flex-wrap:wrap;
+}
+.card a{
+     text-decoration:none;  
+}
+.card .item{
+       position: relative;
+       flex-shrink:2;
+       flex-basis:16em;
+       align-content:baseline;
+       height:360px;
+       background-color:white;
+       margin:10px;
+       box-shadow:0px 0px 4px grey;
+       box-sizing:border-box;
+       transition:all 0.4s;
+       border:1px solid white;
+}
+.card .item:hover{
+      border-color: royalblue;
+}
+.card .btn_image a:nth-child(1){
+       display:inline-block;
+       text-align:center;
+       position:absolute;
+       z-index:2;
+       top:10px;
+       left:5px;
+       font-size:0.9em;
+       color:rgb(36, 40, 43);
+       border:1px solid black;
+       border-radius:10px;
+       padding:3px;
+       background-color:rgb(240, 224, 84);
+       cursor:pointer;
+       transition: all 0.3s;
+   
+}
+
+.card .btn_image a:nth-child(1):hover{
+     color:black;
+     background-color:blanchedalmond;
+
+}
+.card .btn_image a:nth-child(2){
+    position: relative;
+    display:block;
+    width:100%;
+  
+}
+.card .btn_image img{
+     position: relative;
+      width:100%;
+      height:120px;
+      z-index:1;
+      opacity:0.8;
+      transform: all 0.4s;
+}
+.card .btn_image img:hover{
+    opacity:1;
+    transform: all 0.4s;
+}
+.card .item h1 { 
+     font-size:0.9em;
+     font-family:sans-serif;
+     text-align:justify;
+     padding:10px;
+     max-height:80px;
+     overflow: hidden;
+}
+.card .item h1 a{
+     color: cadetblue;
+}
+.card .item p{
+    font-size:0.9em;
+     font-family:sans-serif;
+     text-align:justify;
+     padding:10px;
+     color: rgb(133, 130, 130);
+     max-height:81px;
+    overflow: hidden;
+}
+.card .item .icone{
+   
+    position: absolute;
+    bottom:0px;
+    text-align:center;
+    width:100%;
+
+}
+.card .item .icone a {
+      margin:10px;
+      display:inline-block;
+      font-size:1em;
+      width:6em;
+      padding:3px;
+      border:1px solid black;
+      border-radius:10px; 
+      text-decoration:none;   
+      background-color:black;
+      color:white;
+}
+.card .item .icone a:nth-child(1):hover{
+     color:grey;
+     opacity: 0.8;
+}
+.card .item .icone a:nth-child(2):hover{
+    color:red;
+    opacity: 0.8;
+}
+

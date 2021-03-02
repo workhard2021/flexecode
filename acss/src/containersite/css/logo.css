@@ -1,0 +1,39 @@
+section{
+    display:flex;
+    justify-content:center;
+    align-items:center; 
+}
+.logo #title_btn{
+     position:absolute;
+     top:30%;
+     text-align:left;
+     color:white;
+     z-index:1;
+     width:100%; 
+     display:flex;
+     justify-content:start;
+     align-items:center;
+     flex-direction:column;
+}
+.logo #title_btn h2{
+    color:white;
+    font-size:1.2em;
+}
+.logo #title_btn #btn{
+       font-size:1.2em;
+       padding:12px;
+       margin:20px auto;
+       border:1px solid rgb(138, 126, 126);
+       border-radius:10px;
+       background-color:rgb(85, 125, 158);
+       cursor: pointer;
+       transition:all 0.3s;
+}
+.logo #title_btn #btn:hover{
+     opacity:0.9;
+}
+#logo_image {
+     position: relative;
+     width:100%; 
+     height:300px;
+}

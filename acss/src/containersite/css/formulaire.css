@@ -1,0 +1,141 @@
+.formulaire{
+    position:relative;
+     display: flex;
+     justify-content:space-around;
+     flex-direction:column;
+     align-items:center;
+     width:100%;
+     background-color:gainsboro;
+}
+.formulaire .title{
+      font-size:2em;
+      text-align:center;
+      padding:10px;
+      box-sizing:border-box;
+      font-family:sans-serif;
+      color:rgb(255, 255, 255);
+}
+.formulaire .login_sign {
+     position:relative;
+     width:500px;
+     display:flex;
+     flex-direction:column;
+     justify-content:center;
+     align-items:center;
+     background:white
+}
+.formulaire .login_sign .item{
+    position:relative;
+    width:90%;
+    display:flex;
+    justify-content:center;
+    align-items:flex-start;
+    flex-direction:column;
+    margin:auto;
+    padding:10px;
+}
+.formulaire .login_sign .item label{
+    display:block;
+    font-size:1.1em;
+    width:90%;
+    margin:auto;
+    padding:5px;
+}
+.formulaire .login_sign .item input{
+    position:relative;
+     display:block;
+     width:90%;
+     height:30px;
+     font-size:1.1em;
+     font-family:sans-serif;
+     padding:6px;
+     margin:auto;
+     box-sizing:border-box;
+}
+.formulaire .login_sign .image{
+      border-radius:2px;
+      box-shadow:0px 0px 2px grey;
+      width:20%;
+      display:inline-block;
+      text-align:center;
+      text-transform:capitalize;
+      opacity:0.8;
+      cursor: pointer;
+      margin-right:20px;
+}
+.formulaire .login_sign .image:hover{
+     opacity:1;
+}
+.formulaire .login_sign #image{
+    display: none;
+}
+.formulaire .login_sign #select_item{
+     margin:auto;
+     width:90%;
+}
+.formulaire .login_sign #select{
+      position:relative;
+      font-size:1.2em;
+      width:auto;
+}
+.formulaire .login_sign .item textarea{
+     width:90%;
+     min-height:100px;
+     box-sizing:border-box;
+     font-size:1em;
+     padding:6px;
+     margin:auto;
+     max-width:90%;
+}
+.formulaire .login_sign .item button{
+    width:150px;
+     font-size:1.2em;
+     padding:10px;
+     margin:auto;
+     cursor: pointer;
+     border:none;
+     border-radius:2px;
+     opacity:0.8;
+}
+.formulaire .login_sign .item button:hover{
+    opacity:1;
+}
+.formulaire .login_sign .btn a{
+      font-size:1.2em;
+      color:black;
+      margin:auto;
+      opacity:0.6;
+}
+.formulaire .login_sign .btn a:hover{
+     opacity:1;
+}
+.formulaire .btn_redirection{
+     font-size:1.5em;
+     display:inline-block;
+     padding:8px;
+     background-color:grey;
+     color:white;
+     cursor:pointer;
+     border-radius:3px;
+}
+.formulaire .item p{
+     font-size:1em;
+     width:100%;
+     box-sizing:border-box;
+     padding:2px;
+}
+.formulaire .inValid_msg{
+    color:rgb(235, 94, 94);
+    background-color:yellowgreen;
+}
+ .formulaire .valid_msg{
+     font-size:1.5em;
+     color:yellowgreen;
+     text-align:center;  
+}
+
+.formulaire .valid{
+     background-color:initial;
+     color:rgb(235, 94, 94);
+     font-size:0.9em;
+}

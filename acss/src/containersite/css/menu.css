@@ -1,0 +1,205 @@
+*{
+    padding:0;
+    margin:0;
+    font-family:sans-serif;
+}
+header{
+     background-color: white;
+     box-shadow: 0px 0px 4px black;
+     width:100%;
+     z-index:3;
+}
+nav{
+     display:flex;
+     justify-content:space-evenly;
+     flex-wrap:wrap;
+     width:100%;
+}
+nav a{
+     text-decoration:none;
+     color:black;
+     font-size:1em;
+     display:inline-block;
+     padding:8px;
+     box-sizing:border-box;
+     text-transform: capitalize;
+     transition:all 0.4s;
+}
+nav .menu:nth-child(1) a:hover{
+     color:rgb(153, 150, 150);
+}
+nav .menu{
+    
+    display:flex;
+    flex:2;
+    justify-content:space-evenly;
+    align-items:center;
+    flex-wrap: wrap;
+    padding:20px 0px;
+}
+nav .menu #toggle{
+      position:absolute;
+      z-index:99;
+      width:400px;
+      top:75px;
+      left:15px;
+      background-color: rgba(233, 233, 225);   
+}
+nav .menu #toggle span{
+      color:rgb(8, 134, 134);
+}
+nav .menu:nth-child(1)  .sub_menu{
+     list-style: none;
+     width:80%;
+     margin:10px auto;
+     background-color: white;
+     box-shadow:0px 0px 3px whitesmoke;
+}
+nav .menu:nth-child(1)  .sub_menu a{
+      display:inline-block;
+      width:100%;
+      font-size:0.9em;
+      font-family:sans-serif;
+      padding:10px;
+      transition:all 0.5s;
+      text-transform: capitalize;
+      border-bottom:1px solid rgb(233, 230, 230);
+      background-color: white;
+}
+
+nav .menu:nth-child(1)  .sub_menu:nth-child(1) a:hover{
+      padding-left: 20px;
+      background-color: white;
+     
+}
+
+nav .menu:nth-child(1)  .sub_menu:nth-child(2) a{
+    font-size:14px;
+
+}
+nav .menu:nth-child(1) .sub_menu:nth-child(2) a:hover{
+      opacity:0.8;
+      color:black;
+}
+
+nav .menu:nth-child(1)  .sub_menu:nth-child(2) a img{
+      width:70px;
+      height:50px;
+      border-radius:10px;
+}
+nav .menu:nth-child(2){
+      height:20px;
+}
+nav .menu:nth-child(2) a{
+     display:inline-block;
+     width:90%;
+     text-align:center;
+     padding:0px;
+     transition:all 0.3s;
+}
+nav .menu:nth-child(2) a:hover{
+       font-size:1.3em;
+}
+nav .menu:nth-child(2) a:nth-child(1){
+     font-weight:bold;
+     color:rgb(149, 162, 201);
+}
+
+nav .menu:nth-child(3) #sign_login{
+      display:flex;
+      width:100%;
+      justify-content:space-evenly;
+}
+
+nav .menu:nth-child(3) #sign_login a{
+     flex:1;
+     text-align:center;
+     border:1px solid black;
+     box-sizing:border-box;
+     border-radius:10px;
+     padding:3px;
+     margin:auto 2px;
+     transition:all 0.5s;
+}
+
+nav .menu:nth-child(3) #sign_login a:nth-child(1){
+      border:initial;
+
+}
+nav .menu:nth-child(3) #sign_login #sign,#login{
+     background-color:black;
+     color:white;
+      transition:all 0.8s;
+}
+nav .menu:nth-child(3) #sign_login a:nth-child(1) .fas{
+     display:block;
+     text-align:right;
+}
+nav .menu:nth-child(3) #sign_login a:nth-child(1):hover{
+      color:red;
+      background-color:initial;
+}
+nav .menu:nth-child(4){
+     background-color:gainsboro;
+     position:absolute;
+     top:16px;
+     width:450px;
+     height:30px;
+     box-shadow:0px 0px 2px grey;
+}
+
+nav .menu:nth-child(4) input{
+     display:inline-block;
+     width:400px;
+     font-size:1.1em;
+     opacity:7;
+     padding-left:5px;
+     outline:none;
+     font-style:italic;
+     order:2;
+     padding:5px 3px;
+}
+
+nav .menu:nth-child(4) button{
+      font-size:1.1em;
+      padding:5px;
+      cursor: pointer; 
+      border:initial;
+      background-color: initial;
+      transition:all 0.3s;
+}
+nav .menu:nth-child(4) button:hover{
+      color:white;
+}
+/*media key*/
+@media screen and (max-width:980px){
+   
+     nav   .logo{
+           order:-1;
+           flex:3;
+           flex-basis:100em;
+     }
+    
+     nav  #sign_login{
+          display: flex;
+          flex-direction:row;
+          justify-content: space-between;
+          flex-grow:3;
+     }
+    
+     nav .menu:nth-child(3) #sign_login a:first-child .fas{
+          display:inline;
+     }
+     nav .menu:nth-child(3) #sign_login a:first-child{
+           position:absolute;
+           top:20px;
+           right:30px;
+     }
+     nav .menu:nth-child(1)  #toggle{
+           width:90%;
+           top:135px;
+           left:0px;
+           margin-left:5%;
+
+     }
+}
