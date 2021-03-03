@@ -3,12 +3,19 @@
     margin:0;
     font-family:sans-serif;
 }
+main{
+      scroll-behavior:smooth;
+      transition:all 0.5s;
+}
+
 header{
      background-color: white;
      box-shadow: 0px 0px 4px black;
      width:100%;
      z-index:3;
+   
 }
+
 nav{
      display:flex;
      justify-content:space-evenly;
@@ -17,21 +24,31 @@ nav{
 }
 nav a{
      text-decoration:none;
-     color:black;
-     font-size:1em;
+     color:#000000;
+     font-size:1.2em;
      display:inline-block;
-     padding:8px;
+     padding:5px;
      box-sizing:border-box;
      text-transform: capitalize;
      transition:all 0.4s;
+     white-space: nowrap;
 }
+
 nav .menu:nth-child(1) a:hover{
      color:rgb(153, 150, 150);
 }
+
+nav .menu:first-child a:first-child{
+      width:25px;
+}
+
+nav .menu:first-child a{
+      padding:5px;
+      box-sizing:border-box;
+}
 nav .menu{
-    
     display:flex;
-    flex:2;
+    flex:1.5;
     justify-content:space-evenly;
     align-items:center;
     flex-wrap: wrap;
@@ -55,6 +72,8 @@ nav .menu:nth-child(1)  .sub_menu{
      background-color: white;
      box-shadow:0px 0px 3px whitesmoke;
 }
+
+
 nav .menu:nth-child(1)  .sub_menu a{
       display:inline-block;
       width:100%;
@@ -65,6 +84,11 @@ nav .menu:nth-child(1)  .sub_menu a{
       text-transform: capitalize;
       border-bottom:1px solid rgb(233, 230, 230);
       background-color: white;
+      white-space:nowrap;
+      overflow-x: hidden;
+}
+nav .menu .sub_menu:nth-child(1) a{
+      font-size:1em;
 }
 
 nav .menu:nth-child(1)  .sub_menu:nth-child(1) a:hover{
@@ -73,10 +97,7 @@ nav .menu:nth-child(1)  .sub_menu:nth-child(1) a:hover{
      
 }
 
-nav .menu:nth-child(1)  .sub_menu:nth-child(2) a{
-    font-size:14px;
 
-}
 nav .menu:nth-child(1) .sub_menu:nth-child(2) a:hover{
       opacity:0.8;
       color:black;
@@ -95,7 +116,7 @@ nav .menu:nth-child(2) a{
      width:90%;
      text-align:center;
      padding:0px;
-     transition:all 0.3s;
+     transition:all 0.5s;
 }
 nav .menu:nth-child(2) a:hover{
        font-size:1.3em;
@@ -104,7 +125,9 @@ nav .menu:nth-child(2) a:nth-child(1){
      font-weight:bold;
      color:rgb(149, 162, 201);
 }
-
+nav .menu:nth-child(3){
+      flex:1.5;
+}
 nav .menu:nth-child(3) #sign_login{
       display:flex;
       width:100%;
@@ -112,7 +135,7 @@ nav .menu:nth-child(3) #sign_login{
 }
 
 nav .menu:nth-child(3) #sign_login a{
-     flex:1;
+     
      text-align:center;
      border:1px solid black;
      box-sizing:border-box;
@@ -129,16 +152,24 @@ nav .menu:nth-child(3) #sign_login a:nth-child(1){
 nav .menu:nth-child(3) #sign_login #sign,#login{
      background-color:black;
      color:white;
-      transition:all 0.8s;
+    transition:all 0.8s;
 }
+
 nav .menu:nth-child(3) #sign_login a:nth-child(1) .fas{
-     display:block;
+     display:inline-block;
      text-align:right;
 }
 nav .menu:nth-child(3) #sign_login a:nth-child(1):hover{
       color:red;
       background-color:initial;
 }
+nav .menu:nth-child(3) #sign_login a:first-child .fas{
+      display:inline-block;
+      width:40px;
+      font-size:1.2em;
+      text-align:center;
+}
+ 
 nav .menu:nth-child(4){
      background-color:gainsboro;
      position:absolute;
@@ -154,8 +185,7 @@ nav .menu:nth-child(4) input{
      font-size:1.1em;
      opacity:7;
      padding-left:5px;
-     outline:none;
-     font-style:italic;
+     font-family:sans-serif;
      order:2;
      padding:5px 3px;
 }
@@ -171,6 +201,58 @@ nav .menu:nth-child(4) button{
 nav .menu:nth-child(4) button:hover{
       color:white;
 }
+nav .connexion { 
+display:flex;
+flex:1.5;
+justify-content:space-evenly;
+align-items:center;
+flex-wrap: wrap;
+padding:5px 0px;   
+font-size:1.3em;
+}
+nav .connexion  i{
+       font-size:1.2em;
+       color:white;
+       background:grey;
+       padding:12px;
+       border-radius:50%;
+       cursor: pointer;
+}
+#search_header{
+      position:absolute;
+      display:flex;
+      justify-content:flex-start;
+      align-items:center;
+      flex-direction:column;
+      background-color:rgb(235, 222, 222);
+      box-sizing:border-box;
+      width:100%;
+      list-style:none;
+      z-index:8;
+      background-color:red;
+      height:0px;
+      display:none;
+}
+#search_header li{
+       width:30em;
+}
+#search_header li a{
+       position:relative;
+       display:inline-block;
+       white-space:nowrap;
+       text-decoration:none;
+       color:black;
+       padding:10px;
+       box-sizing:border-box;   
+       width:100%; 
+       flex-shrink:2;
+       background-color:cornsilk;
+       transition:all 0.4s;
+}
+#search_header a:hover{
+       background-color:rgb(96, 96, 104) ;
+}
+
 /*media key*/
 @media screen and (max-width:980px){
    
@@ -180,26 +262,18 @@ nav .menu:nth-child(4) button:hover{
            flex-basis:100em;
      }
     
-     nav  #sign_login{
-          display: flex;
-          flex-direction:row;
-          justify-content: space-between;
-          flex-grow:3;
-     }
-    
-     nav .menu:nth-child(3) #sign_login a:first-child .fas{
-          display:inline;
-     }
      nav .menu:nth-child(3) #sign_login a:first-child{
            position:absolute;
            top:20px;
-           right:30px;
+           right:1%;
+     }
+     nav .menu:first-child{
+            flex:2;
      }
      nav .menu:nth-child(1)  #toggle{
            width:90%;
            top:135px;
            left:0px;
            margin-left:5%;
-
      }
 }

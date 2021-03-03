@@ -1,19 +1,19 @@
 import React from 'react';
 import ReactDom from 'react-dom';
+import {BrowserRouter as Router} from 'react-router-dom';
+
 
 import Menu from './containersite/menu';
 import Logo from './containersite/logo';
-import Card from './containersite/card';
-import CardProject from './containersite/cardProject';
-import ViewVideo from './containersite/viewVideo';
+import IndexUser from './user/indexUser';
+
 
 const App=(props)=>{
 	    
-	    return <>
-		            <Menu/>	
-					<Logo/>	
-					<ViewVideo/>  
-		       </>
+	    return  <Router> 
+			            <Menu/>	
+					    <IndexUser/>
+		        </Router>
 }
 
 ReactDom.render(<App/>,document.getElementById('root'))

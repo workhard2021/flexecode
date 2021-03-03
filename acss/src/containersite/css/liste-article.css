@@ -1,0 +1,106 @@
+*{
+     padding:0px;
+     margin:0px;
+}
+.list{
+    display:flex;
+    justify-content:flex-start;
+    flex-direction:column;
+    align-items:center;
+    width:100%;
+    font-family:sans-serif;
+}
+.list table caption{
+       font-size:1.3em;
+       color:royalblue;
+}
+.list table {
+      position: relative;
+      background-color: whitesmoke;
+      display:flex;
+      justify-content:center;
+      align-items:center;
+      flex-direction:column;
+      width:90%;
+      flex-grow:2;
+}
+.list table, table th ,table td{
+   border: 1px solid black;
+   border-collapse:collapse;
+   box-sizing:border-box;
+}
+.list table thead,tbody{
+     position:relative;
+     display:flex;
+     flex-direction:column;
+     align-items:center;
+     justify-content:flex-start;
+     width:100%;
+}
+.list table tr{
+    position:relative;
+    display:flex;
+    flex-direction:row;
+    width:100%;
+}
+.list table th:first-child{
+    flex: 1;
+}
+.list table th{
+     font-size:1.2em;
+     flex:2;
+}
+
+.list table td:first-child{
+    flex: 1;
+    font-size: 1.5em;
+}
+.list table td{
+     text-align:center;
+     flex:2;
+     text-align:center;
+}
+.list table img{
+     width:80px;
+     height:30px;
+     border-radius:5px;
+}
+
+.list table td a{
+     color:rgb(27, 29, 29);
+     font-family:sans-serif;
+     text-decoration:none;
+     font-size:1em;
+     display:inline-block;
+     padding:5px;
+     transition:all 0.3s;
+}
+.list table td a:hover{
+      color:rgb(206, 143, 169);
+}
+
+.list form {
+      display:flex;
+      justify-content:center;
+      align-items:center;
+      width:90%;
+}
+.list form input{
+     display:inline-block;
+     width:50%;
+     height:15px;
+     padding:5px;
+     font-size:1em;
+     font-family:sans-serif;
+     margin:10px 0px;
+}
+.list form button{
+     font-size:1.2em;
+     padding:4px;
+     margin-left:10px;
+     outline:none;
+     cursor:pointer;
+}
+.list form ::placeholder{
+      color: rgb(151, 146, 146);
+}

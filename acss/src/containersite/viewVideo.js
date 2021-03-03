@@ -4,7 +4,7 @@ import './css/viewVideo.css';
 
 const  ViewVideo=(props)=>{
       
-      return <setion className="viewVideo">
+      return <setion className="viewArticle">
               <div className="item">
                <div className="video">
                  <ReactPlayer width="100%" url='https://www.youtube.com/watch?v=ysz5S6PUM-U'/>

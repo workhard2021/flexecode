@@ -1,0 +1,122 @@
+.item_user{
+	display:flex;
+	justify-content:flex-start;
+	align-content:center;
+	flex-direction:column;
+	padding:10px;
+	width:270px;
+	height:350px;
+	box-shadow:0px 0px 5px white;
+	border-radius:10px;
+	overflow:hidden;
+	position:absolute;
+	left:50%;
+	transform:translate(-50%,-50%);
+	border:1px solid rgb(234, 239, 240);
+	z-index:9999;
+	font-style:italic;
+	background-color:white;
+	
+}
+.item_user .btn_home_formulaire {
+	 position:absolute;
+	 top:10px;
+	 left:3%;
+	 color:white;
+	 padding:5px;
+	 cursor:pointer;
+	 border-radius:50%;
+	 background:rgb(226, 142, 142);
+	 font-size:1.2em;
+}
+
+.item_user .title_user{
+	 display:flex;
+	 justify-content:center;
+	 align-content:center;
+	 flex-direction:column;
+	 width:100%;
+	 position:relative;
+}
+
+.item_user img{
+	 width:90px;
+	 height:90px;
+	 position:relative;
+	 margin:0px auto;
+	 border-radius:50%;
+	 filter:saturate(1.5);
+	 cursor:pointer;
+}
+
+.item_user .title_user .info
+{    display:flex;
+	 justify-content:flex-start;
+	 align-content:flex-start;
+	 flex-direction:column;
+	 width:100%;
+	 position:relative;
+	 margin:3px auto;
+}
+.item_user .title_user .info .dot{
+	 width:100%;
+	 font-size:1em;
+	 color:white;
+	 margin:2px auto;
+}
+.item_user .title_user .info .dot span{
+	 color:#737776;
+}
+
+.item_user .title_user .btn{
+	 display:flex;
+	 justify-content:space-around;
+	 align-content:flex-start;
+	 flex-direction:row;
+	 flex-wrap:wrap;
+	 width:100%;
+	 position:relative;	
+	 margin:20px 0px;
+}
+.item_user .title_user .btn .dot{
+	 width:40%;
+	 color:black;
+	 text-align:center;
+	 box-shadow:0px 0px 3px white;
+	 background:grey;
+	 cursor:pointer;
+	 border-radius:10px;
+	 opacity:1;
+	 transition:all 0.4s linear;
+     margin:20px auto;
+     padding:3px 2px;
+}
+.item_user .title_user .btn .dot:hover{
+	 opacity:0.8;
+	 background:white; 
+}
+.item_user .title_user .btn .dot a{
+	 text-decoration:none;
+	 color:black;
+}
+.messageSearch{
+	top:20px;
+}
+
+.item_user .icon_user_annonyme{
+	background-color:grey;
+	display:block;
+	position:relative;
+	margin:0px auto;
+	border-radius:50%;
+	filter:saturate(1.5);
+	cursor:pointer;
+	font-size:2em;
+	color:white;
+	text-align:center;
+	padding:20px;
+	border:1px solid rgb(126, 114, 114);
+}
+
+
+
