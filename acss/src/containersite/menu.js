@@ -1,10 +1,29 @@
-import React, { useState} from 'react';
+import React, { useState,useEffect} from 'react';
 import {Link} from 'react-router-dom';
+import * as API from '../api/config/api';
 import './css/menu.css';
 const Menu=(props)=>{
       
         const [open,setOpen]=useState({toggle:false,serch:false,sign:false,login:false});
         const placeholder="Recherche ...";
+        const [categorie,setCategorie]=useState([]);
+        const [recent,setRecent]=useState([])
+        const [success,setSuccess]=useState(false)
+        const url="/article/all/";
+        const init=async ()=>{
+                const res = await API.all(url);
+                 if(res.error){
+                       const ctg= res.data.filter((values,index)=>index===res.data.findIndex( (value,index)=>value.categorie===values.categorie))   ;
+                       setCategorie(ctg);
+                       setRecent(res.data.slice(0,5));
+                        setSuccess(true)
+                 }
+        }
+     
+        useEffect(()=>{
+              init()
+        },[success])
+
         
       return<> <header>
              <nav>
@@ -13,26 +32,26 @@ const Menu=(props)=>{
                        <Link to="/#" onClick={()=>setOpen((state)=>{ return {...state,toggle:!state.toggle,sign:false,login:false} })}>
                            <i className={!open.toggle?"fas fa-align-justify" : "fas fa-times"}></i>
                        </Link>
-                       <Link to="/article/formation"> Formation</Link>
-                       <Link to="/project/">Project </Link>
-                       <Link to="/forum">Forum </Link>
+                       <Link to="/" onClick={()=> setOpen(c=>{return{...c,toggle:false}})} > Formation</Link>
+                       <Link to="/project/categorie" onClick={()=> setOpen(c=>{return{...c,toggle:false}})} >Project </Link>
+                       <Link to="/forum" onClick={()=> setOpen(c=>{return{...c,toggle:false}})}>Forum </Link>
                        { open.toggle && 
 
                        <div id="toggle">
                           <ul  id='categorie' className="sub_menu">
                              <span>Categorie</span>
-                            <li><Link to={`/article/java`}>Java </Link></li>
-                            <li><Link to={`/article/python`}>Python 1</Link></li>
-                            <li><Link to={`/article/php`}>Php </Link></li>
+                             {categorie && categorie.map((value,index)=>{
+                                 return <li key={index}><Link  onClick={()=> setOpen(c=>{return{...c,toggle:false}})}  to={`/article/categorie/${value.categorie}`}> {value.categorie}</Link></li>
+                             })}
+
                           </ul>
 
                           <ul  className="sub_menu">
                             <span>Recent</span>
-                            <li><Link to=""><img src="/image/r1.jpg" alt="recent"/> java debutenat en php java script</Link></li>
-                            <li><Link to=""><img src="/image/a.jpg" alt="recent"/> Python debutenat en php java script</Link></li>
-                            <li><Link to=""><img src="/image/r1.jpg" alt="recent"/> Java debutenat en php java script</Link></li>
-                            <li><Link to=""><img src="/image/a.jpg" alt="recent"/> php debutenat en php java script</Link></li>
-                            <li><Link to=""><img src="/image/a.jpg" alt="recent"/> php debutenat en php java script</Link></li>             
+                            {recent && recent.map((value,index)=>{
+                                 return <li key={index}><Link onClick={()=>setOpen(c=>{return{...c,toggle:false}})} to={`/article-view/${value.categorie}`}><img src={value.imageUrl} alt="recent"/> {value.title}</Link></li>
+                             })}
+
                           </ul>
                          </div>
                        }
@@ -40,8 +59,8 @@ const Menu=(props)=>{
                 </div>
 
                 <div className="menu logo">
-                       <Link to="/formation/">apprendre & pratiquer</Link>
-                       <Link to="/article/"> flexecode </Link>
+                       <Link to="/">apprendre & pratiquer</Link>
+                       <Link to="/"> flexecode </Link>
                 </div>
                 { 1===1?
                  <div className="menu sign_login">

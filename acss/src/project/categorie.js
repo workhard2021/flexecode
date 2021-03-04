@@ -1,36 +1,50 @@
 import React,{useState,useEffect} from 'react';
-import {Link} from 'react-router-dom';
+import {Link,useHistory} from 'react-router-dom';
+import '../containersite/css/cardProject.css';
 import * as API from '../api/config/api';
 
 const Categorie=(props)=>{
+
+   const [success,setSucess]=useState(false);
+   const history=useHistory();
    const [array,setArray]=useState([]);
-   const url="/project/all/";
+  
+   const URL="/project/all/";
+
    const init=async ()=>{
-           const res = await API.all(url);
-            if(res.error){
-                  const item=[];let i=0;
-                  for(let data of res.data){
-                        const {categorie}=data;
-                        item[i]=categorie;
-                        i++;
-                   }
-                 setArray(Array.from(new Set(item)));
+           const res = await API.all(URL);
+           if(res){
+                 if(res.error) {
+                        const categories= res.data.filter((values,index)=>index===res.data.findIndex( (value,index)=>value.categorie===values.categorie))   ;
+                        setArray(categories);
+                         setSucess(true)
+                 }else{
+                        alert(JSON.stringify(res.data))
+                 }
+
+            }else {
+
+                    history.push('/article');
             }
    }
 
    useEffect(()=>{
          init()
-   },[])
-
-  return <div>
-           <p>Categorie</p>
-           <ul>
-             {array && array.map((value,index)=> {
-                   return <li key={index} ><Link to={ `/project/categorie/${value}`}>{value}</Link></li>})
-            }
-           </ul>  
-  </div> 
-
+   },[success])
+      return <>
+              <h2>Categorie des projects</h2>
+             <setion className="cardProject">
+                
+              {array && array.map((value)=>{
+                 return <div className="project" key={value._id}>
+                        <div className="item"  >
+                           <img id="logo_image" src={value.imageUrl} alt="logo"/>
+                           <Link to={ `/project/categorie/${value.categorie}`}>{value.categorie}</Link>
+                       </div>
+                       <p>Vous trouverez tous les projects concernant {value.categorie}</p>
+                   </div> 
+              })}
+        </setion>  
+        </> 
 }
-
-export default  Categorie
+export default Categorie

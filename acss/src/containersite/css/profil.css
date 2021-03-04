@@ -15,7 +15,7 @@
 	border:1px solid rgb(234, 239, 240);
 	z-index:9999;
 	font-style:italic;
-	background-color:white;
+	background-color:rgb(220, 231, 238);
 	
 }
 .item_user .btn_home_formulaire {
@@ -61,7 +61,7 @@
 .item_user .title_user .info .dot{
 	 width:100%;
 	 font-size:1em;
-	 color:white;
+	 color:rgb(172, 161, 161);
 	 margin:2px auto;
 }
 .item_user .title_user .info .dot span{

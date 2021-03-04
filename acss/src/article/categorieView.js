@@ -1,35 +1,48 @@
 import React,{useState,useEffect,useCallback} from 'react';
 import {Link,useParams} from 'react-router-dom';
 import * as API from '../api/config/api';
+import '../containersite/css/cardProject.css';
 
 const CategorieView=(props)=>{
 
    const [array,setArray]=useState([{}]);
    const {categorie}=useParams();
+   const [success,setSuccess]=useState(false)
    const URL=`/article/categorie/${categorie}`;
    const init=useCallback(  async ()=>{
            const res = await API.view(URL);
             if(res.error){
                 
                 setArray(res.data);
+                setSuccess(true)
             }
    },[URL])
+   const redirection=(e,x)=>{
+          e.preventDefault();
+          window.location.href=x;
+   }
 
    useEffect(()=>{
          init()
-   },[init])
+   },[success])
+   
   
-   if(array.length>0) { 
+   return <>
+   <h2>{array.length>0 && array[0].categorie}</h2>
+  <setion className="cardProject">
 
-      return   <> <p>Categorie en { array[0].categorie}</p>
-           <ul>
-             {array && array.map(value=> {
-                   return <li key={value._id}><Link to={ `/article-view/${value._id}`}>{value.categorie} voir linkGithub</Link></li>})
-             }
-           </ul>  
-         </>
-         
-    }else return  <div>Aucun article</div>
+     {array && array.map((value,index)=>{
+        return <div className="project" key={value._id}>
+            <div className="item">
+                 <img id="logo_image" src={value.imageUrl} alt="logo"/>
+                 <Link className="dot-1" to={ `/article-view/${value._id}`}><strong>{value.title} </strong></Link>
+            </div>
+            <p>{value.comment}</p>
+        </div> 
+
+     })}  
+</setion>  
+</> 
          
 }
 

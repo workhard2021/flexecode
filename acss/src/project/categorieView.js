@@ -1,36 +1,55 @@
-import React,{useState,useEffect,useCallback} from 'react';
-import {Link,useParams} from 'react-router-dom';
+import React,{useState,useEffect} from 'react';
+import {Link,useHistory,useParams} from 'react-router-dom';
+import '../containersite/css/cardProject.css';
 import * as API from '../api/config/api';
 
 const CategorieView=(props)=>{
 
-   const [array,setArray]=useState([{}]);
+   const [array,setArray]=useState([]);
+   const [success,setSucess]=useState(false);
+   const history=useHistory();
    const {categorie}=useParams();
    const URL=`/project/categorie/${categorie}`;
-   const init=useCallback(  async ()=>{
+
+   const init=async ()=>{
            const res = await API.view(URL);
-            if(res.error){
-                
-                setArray(res.data);
+           if(res){
+
+                 if(res.error) {
+                     setArray(res.data);
+                     setSucess(true)
+                 }
+
+            }else {
+
+                //    history.push('/article');
             }
-   },[URL])
+   }
+   const redirection=(e,x)=>{
+           // e.preventDefault();
+           window.location.href=x;
+   }
 
    useEffect(()=>{
          init()
-   },[init])
-  
-   if(array.length>0) { 
+   },[success,URL])
+   
+         
+      return <>
+            <h2>{array.length>0 && array[0].categorie}</h2>
+           <setion className="cardProject">
+    
+              {array && array.map((value,index)=>{
+                 return <div className="project" key={value._id}>
+                     <div className="item">
+                          <img id="logo_image" src={value.imageUrl} alt="logo"/>
+                          <Link className="dot-1" target='_blank' to={value.linkGithub} onClick={(e)=>redirection(e,value.linkGithub)}> <strong>{value.title} </strong></Link>
+                     </div>
+                     <p>{value.comment}</p>
+                 </div> 
 
-      return   <> <p>{ array[0].categorie}</p>
-           <ul>
-             {array && array.map(value=> {
-                   return <li key={value._id}><Link to={ `${value.linkGithub}`}>{value.categorie} voir linkGithub</Link></li>})
-             }
-           </ul>  
-         </>
-         
-    }else return  <div>Aucun article</div>
-         
+              })}  
+        </setion>  
+        </> 
 }
-
-export default  CategorieView
+export default CategorieView

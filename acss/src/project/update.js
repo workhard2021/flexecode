@@ -1,13 +1,16 @@
-import React,{useState,useRef,useEffect,useCallback} from 'react';
-import {useParams,Link} from 'react-router-dom';
+import React,{useState,useRef,useEffect} from 'react';
+import {useParams,useHistory} from 'react-router-dom';
 import * as API from '../api/config/api';
+import '../containersite/css/formulaire.css';
 const Update=()=>{
     const option=['php','css','java','javascript','python','nodejs','reactjs','react native'];
     const [data,setData]=useState({});
     const [success,setSuccess]=useState(false);
     const [message,setMessage]=useState('');
     const inputRefFile=useRef(null);
+    const [images,setImage]=useState('')
     const {id}=useParams();
+    const history=useHistory();
     const URL=`/project/view/${id}`;
     const URLUPDATE=`/project/update/${id}`;
 
@@ -16,32 +19,15 @@ const Update=()=>{
           const name=e.target.name;
           const value=e.target.value;
           switch(name){
-                case 'categorie':
-                    setData(state=>{return {...state,[name]:value}})
-                    break;
-
-               case 'title':
-                    setData(state=>{return {...state,[name]:value}})
-                    break;
-                case 'comment':
-                   setData(state=>{return {...state,[name]:value}})
-                   break;
-                
-                case 'linkYoutube':
-                    setData(state=>{return {...state,[name]:value}})
-                    break;
-
-              case 'linkGithub':
-                        setData(state=>{return {...state,[name]:value}})
-                        break;
+             
 
                case 'image':
+                    setImage(e.target.files[0].name)
                     setData(state=>{return {...state,[name]:e.target.files}})
                     break;
 
-               default :
-                   const val=name.split(' ').join('_');
-                  setData(state=>{return {...state,codeSource:{...state.codeSource,[val]:value} }})
+                default :
+                     setData(state=>{return {...state,[name]:value}})
                   return null
           }
     }
@@ -67,82 +53,83 @@ const Update=()=>{
                    setSuccess(true)
 
               }else{
+                setSuccess(false)
                   setMessage(res.data)
               }
 
          }else{
               setMessage('Veuillez actualiser la page')
+              setSuccess(false)
          }
     }
-
-    const init= useCallback (  async()=>{
+    const init= async()=>{
             const res= await API.view(URL);
             if(res){
                    if(res.error){
                     setData(state=>{ return {...state,...res.data} });
                 }else{
                          setMessage(res.data)
+                         
                     }
-              }else{
-                   setMessage('Veuillez actualiser la page')
+              }else{ 
+                     setMessage('Veuillez actualiser la page')
               }
-    },[URL])
+    }
 
     useEffect(()=>{
          init()
-    },[init])
+    },[success])
 
-    return <form onSubmit={(e)=>send(e)}>
-              {message &&  <div className={success? 'valide':'invalid'}> {message}</div>}
-              <Link to='/'>HOME</Link>
+    return <setion className="formulaire">
+                <div className="title">Poste votre project</div>
+               <form className="login_sign" onSubmit={(e)=>send(e)}>
+                   
+                   <div className="item">
+                            <span className="btn_redirection" onClick={()=>history.goBack()}> <i class="fas fa-times-circle"></i></span>
+                   </div>
+                   
+                   {message &&  
+                     <div className="item">
+                       <p className={success?"valid_msg":"inValid_msg"}>{message}</p>
+                     </div>
+                    }
+                   <div  className="item">
+                        <label htmlFor="select">Selection</label>
+                          <div id="select_item">
+                            <select name="categorie" id="select" value={data.categorie || ''} onChange={(e)=>saisir(e)}>
+                                   <option  value='' desabled='true'>Choisir</option>
+                                  {option.map((value,index)=>{ return <option key={index} value={value}>{value}</option> }) }
+                             </select>
+                          </div>
+                    </div>
 
-              <table>
-                <tbody>
-  
-                  <tr>
-                  <th>
-                       <label htmlFor='categorie'>Categorie</label>
-                  </th>
-                      <td> 
-                           <select name="categorie" id="categorie" value={data.categorie || ''} onChange={(e)=>saisir(e)}>
-                           <option  value='' desabled='true'>Choisir</option>
-                            {option.map((value,index)=>{ return <option key={index} value={value}>{value}</option> }) }
-                           </select>
-                      </td>
+                   <div  className="item">
+                        <label htmlFor="title">Titre <span className={1==1 ? "valid":"inValid"} >{1==2 && "veuillez remplir ce champ"}</span></label>
+                        <input type="text" value={data.title || ""}  id="title" name="title" placeholder="Titre"  onChange={(e)=>saisir(e)}/>
+                   </div>
 
-                  </tr>
-                  <tr>
-                      <th>
-                          <label htmlFor='title'>Titre:</label>
-                      </th>
-                      <td><input type="text" value={data.title || ""}  id="title" name="title" placeholder="Titre"  onChange={(e)=>saisir(e)}/></td>
-                  </tr>
-                  <tr>
-                      <th>
-                          <label htmlFor='linkGithub'>Lien github:</label>
-                      </th>
-                      <td><input type="text" value={data.linkGithub || ""} id="linkGithub" name="linkGithub" placeholder="Lien github"  onChange={(e)=>saisir(e)}/></td>
-                  </tr>
-                  <tr>
-                      <th>
-                       <label htmlFor='imageUrl'>Image:</label>
-                     </th>
-                      <td><input type="file" name="image"  ref={inputRefFile}  onChange={(e)=>saisir(e)} /></td>
-                  </tr>
-                   <tr>
-                      <th>
-                         <label htmlFor="comment">commentaire:</label>
-                      </th>
-                      <td><textarea id="comment" value={data.comment || ""} name="comment" placeholder="Ajouter commentaire" onChange={(e)=>saisir(e)}></textarea></td>
-                   </tr>
+                   <div  className="item">
+                        <label htmlFor="linkGithub">LinkGithub <span className={1==1 ? "valid":"inValid"} >{1==2 && 'Veuillez remplir ce champ'}</span></label>
+                        <input type="text" value={data.linkGithub || ""} id="linkGithub" name="linkGithub" placeholder="Lien github"  onChange={(e)=>saisir(e)}/>
+                   </div>
 
-                   <tr>
-                      <td colSpan="2"><button>Envoyer</button></td>
-                   </tr>
-                 </tbody>
-              </table>
+                   <div  className="item">
+                        <label htmlFor="image"> <span className="image" >image</span> <span className={1==2 ? "valid":"inValid"} >{images}</span></label>
+                        <input id="image" type="file" name="image"  Ref={inputRefFile}  onChange={(e)=>saisir(e)} />
+                   </div> 
 
-    </form>
+
+                   <div  className="item">
+                        <label htmlFor="comment">Commantaire<span className={1==1 ? "valid":"inValid"} >{1==2 && 'Veuillez remplir ce champs'} </span></label>
+                        <textarea id="comment" value={data.comment || ""} name="comment" placeholder="Ajouter commentaire" onChange={(e)=>saisir(e)}> </textarea>
+                   </div> 
+                   <div  className="item ">
+                       <button>Envoyer</button>
+                   </div>
+               </form>
+             
+        </setion> 
 }
 
 export default Update;
+

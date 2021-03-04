@@ -3,7 +3,7 @@ import './css/formulaire.css';
 
 const UpdateProject=(props)=>{
       
-      return <setion className="formulaire">
+      return <form className="formulaire">
                 <div className="title">Mettre à jour project</div>
                <div className="login_sign">
                    
@@ -51,6 +51,6 @@ const UpdateProject=(props)=>{
 
                </div>
              
-        </setion>   
+        </form>   
 }
 export default UpdateProject

@@ -1,22 +1,25 @@
-import React,{useState,useEffect, useCallback} from 'react';
+import React,{useState,useEffect} from 'react';
 import {Link, useParams} from 'react-router-dom';
+import '../containersite/css/liste-article.css';
 import * as API from '../api/config/api';
 
-const MenagerCategorieView=(props)=>{
 
+
+const MenagerCategorieView=(props)=>{
    const [array,setArray]=useState([]);
    const [success,setSuccess]=useState(false);
    const [message,setMessage]=useState('');
    const [up,setUp]=useState(false);
    const {categorie}=useParams()
-
+   const placeholder="Rechercher..."
    const URL=`/project/categorie/${categorie}`;
-   const init= useCallback (  async ()=>{
+
+   const init=  async ()=>{
            const res = await API.view(URL);
             if(res.error){
                 setArray(res.data);
             }
-   },[URL]);
+   };
 
    const destroy= async (id)=> {
            
@@ -30,43 +33,56 @@ const MenagerCategorieView=(props)=>{
                      setSuccess(true)  
               }else{
                      setMessage(res.data)
+                    
               }
-           }else{
+           }else{   
                   setMessage('veuillez actualiser la page')
            }     
    }
+   const redirection=(e,a)=>{
+            e.preventDefault();
+            window.location=a;
+   }
 
    useEffect(()=>{
-          setUp(true);
           init()
-         return ()=>setUp(false)
-   },[up,success,init])
+   },[success])
    
-     if(!up){
-           return null
-     }
 
+      return <setion className="list">
+                
+                <table>
+                    
+                    <caption>Gestion des  Projets des utlisateur</caption>
+                    <form>
+                        <input type="text" name="search" placeholder={placeholder}/>
+                        <button><i class="fas fa-search"></i></button>
+                    </form>
+                    <thead>
+                        <tr>
+                           <th>N°</th>
+                           <th>Voir</th>
+                           <th>Modifier</th>
+                           <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
 
-if(array.length>0) {
+                    {array && array.map(value=> {
+                       return <tr key={value._id}>
+                           
+                            <td><Link to="#">1</Link></td>
+                            <td><Link to={`${value.linkGithub}`} target='_blank' onClick={(e)=>redirection(e,value.linkGithub)} ><img  src={value.imageUrl}alt="tag" /></Link></td>
+                            <td><Link to={`/project/update/${value._id}`}><i className="fas fa-edit">Modifier</i></Link></td>
+                            <td><Link to="#" onClick={(e)=>destroy(value._id)}> <i className="fas fa-trash-alt">suprimer</i></Link></td>
+                       
+                        </tr>
+                     })}
 
-return <section>
-            <h1>Menager {array[0].categorie}</h1>
-             {message &&  <div className={success? 'valide':'invalid'}> {message}</div>}
-
-           <ul>
-
-             {array && array.map(value=> {
-                 return <React.Fragment key={value._id}>                         
-                          <li><Link to={ `${value.linkGithub}`}>{`${value.title} en ${value.categorie}`} voir linkGithub</Link></li>
-                          <li><Link to={ `/project/update/${value._id}`}>Update</Link></li>
-                          <li><button onClick={(e)=>destroy(value._id)}>Delete</button></li>
-                         </React.Fragment>})
-             }
-           </ul>  
-  </section> 
-
-}else return <div>Aucun Project trouvé</div>
-
+                    </tbody>
+                </table>
+         
+         
+        </setion>   
 }
-
-export default  MenagerCategorieView
+export default MenagerCategorieView

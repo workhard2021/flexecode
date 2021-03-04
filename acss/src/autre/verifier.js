@@ -16,21 +16,21 @@ const Verifier=(object,array)=>{
                                      str = str.replace(/[\s]$/,""); //Enlève les espaces a la fin
 
 	          	   	    	 	     newObject[newArray[i]]=str;
-	          	   	    	 	     errorObject[newArray[i]]='Validé';
+	          	   	    	 	     errorObject[newArray[i]]=true;
 
 	          	}else{
-	          	   	     errorObject[newArray[i]]='le champ doit contenir au moins 3 caractères';
+	          	   	     errorObject[newArray[i]]=false;
 	            }
 	          	     
 	    }
 
-	    if(!Object.values(errorObject).every(value=> value==='Validé')){ 
+	    if(!Object.values(errorObject).every(value=> value===true)){ 
 	    	  
 	    	  return errorObject;
 
 	    }else{
              
-             newObject['verifier']=true;
+             newObject.verifier=true;
 	    	 return newObject;
 	    }
 

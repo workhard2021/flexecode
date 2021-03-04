@@ -13,10 +13,10 @@ const all=(req,res,next)=> {
  };
 
  const view=(req,res,next)=> {
-
- 	      modelArticle.findOne({_id:req.params.id}).
+             
+ 	      modelArticle.findOne({_id:"603934d7d4cf4425e0f5ee65"}).
  	      then(item=> {
-
+                   
  	      	  return res.status(200).json(item)
 
  	      }).catch(e=> res.status(404).json(e))

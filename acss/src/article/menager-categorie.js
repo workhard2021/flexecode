@@ -10,13 +10,8 @@ const MenagerCategorie=(props)=>{
    const init=async ()=>{
            const res = await API.all(url);
             if(res.error){
-                  const item=[];let i=0;
-                  for(let data of res.data){
-                        const {categorie}=data;
-                        item[i]=categorie;
-                        i++;
-                   }
-                 setArray(Array.from(new Set(item)));
+                  const categories= res.data.filter((values,index)=>index===res.data.findIndex( (value,index)=>value.categorie===values.categorie))   ;
+                  setArray(categories);
             }
    }
 
@@ -24,15 +19,25 @@ const MenagerCategorie=(props)=>{
          init()
    },[])
 
-  return <div>
-           <p>Categorie article Menager</p>
-           <ul>
-             {array && array.map((value,index)=> {
-                   return <li key={index} ><Link to={`/article/menager-categorie/${value}`}>{value}</Link></li>})
-            }
-           </ul>  
-  </div> 
+  return <>
+              <h2>Gestion des articles categories</h2>
+             <setion className="cardProject">
+                
+              {array && array.map((value,index)=>{
+                 return <div className="project" key={value._id}>
+                        <div className="item"  >
+                           <img id="logo_image" src={value.imageUrl} alt="logo"/>
+                           <Link to={ `/article/menager-categorie/${value.categorie}`}>{value.categorie}</Link>
+                       </div>
+                       <p>Vous trouverez tous les projects concernant {value.categorie}</p>
+                   </div> 
+              })}
+        </setion>  
+       </> 
 
 }
 
 export default  MenagerCategorie
+
+
+
