@@ -15,7 +15,6 @@ const urlencoded=bodyParser.urlencoded({ extended: false })
  routeCommantaire.get('/search/:data',commentCtl.search);
  routeCommantaire.delete('/destroy/:id',auth,commentCtl.destroy);
 
-
 module.exports=routeCommantaire;
 
 
