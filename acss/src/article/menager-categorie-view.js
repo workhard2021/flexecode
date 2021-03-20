@@ -1,4 +1,4 @@
-import React,{useState,useEffect} from 'react';
+import React,{useState,useEffect, useCallback} from 'react';
 import {Link, useParams} from 'react-router-dom';
 import * as API from '../api/config/api';
 import '../containersite/css/liste-article.css';
@@ -8,17 +8,17 @@ const MenagerCategorieView=(props)=>{
    const [array,setArray]=useState([]);
    const [success,setSuccess]=useState(false);
    const [message,setMessage]=useState('');
-   const [up,setUp]=useState(false);
    const {categorie}=useParams()
    const placeholder='Recherche ...';
 
    const URL=`/article/categorie/${categorie}`;
-   const init= async ()=>{
+   const init=useCallback( async ()=>{
            const res = await API.view(URL);
             if(res.error){
                 setArray(res.data);
             }
-   };
+
+   },[URL]);
 
    const destroy= async (id)=> {
            const URL=`/article/destroy/${id}`;
@@ -40,11 +40,11 @@ const MenagerCategorieView=(props)=>{
 
    useEffect(()=>{
           init()
-   },[success])
+   },[init,success])
    
      
 
-return <setion className="list">
+return <section className="list">
                 
 <table>
     
@@ -79,7 +79,7 @@ return <setion className="list">
 </table>
 
 
-</setion>   
+</section>   
 
 }
 

@@ -60,15 +60,16 @@ nav .menu #toggle{
       width:400px;
       top:75px;
       left:15px;
-      background-color: rgba(233, 233, 225);   
+      background-color: rgba(233, 233, 225);
+
 }
 nav .menu #toggle span{
       color:rgb(8, 134, 134);
 }
 nav .menu:nth-child(1)  .sub_menu{
      list-style: none;
-     width:80%;
-     margin:10px auto;
+     width:99%;
+     margin:5px auto;
      background-color: white;
      box-shadow:0px 0px 3px whitesmoke;
 }
@@ -276,4 +277,9 @@ nav .connexion  i{
            left:0px;
            margin-left:5%;
      }
+}
+
+h2{
+       text-align:center;
+       font-size:1em;
 }

@@ -7,6 +7,7 @@
 }
 .card a{
      text-decoration:none;  
+
 }
 .card .item{
        position: relative;
@@ -39,6 +40,7 @@
        background-color:rgb(240, 224, 84);
        cursor:pointer;
        transition: all 0.3s;
+       text-transform: capitalize;
    
 }
 
@@ -58,11 +60,12 @@
       width:100%;
       height:120px;
       z-index:1;
-      opacity:0.8;
+      opacity:1;
+      filter: saturate(1.5);
       transform: all 0.4s;
 }
 .card .btn_image img:hover{
-    opacity:1;
+   
     transform: all 0.4s;
 }
 .card .item h1 { 

@@ -1,4 +1,4 @@
-import React,{useState,useEffect} from 'react';
+import React,{useState,useCallback,useEffect} from 'react';
 import {Link,useHistory} from 'react-router-dom';
 import '../containersite/css/cardProject.css';
 import * as API from '../api/config/api';
@@ -11,7 +11,7 @@ const Categorie=(props)=>{
   
    const URL="/project/all/";
 
-   const init=async ()=>{
+   const init=useCallback(  async ()=>{
            const res = await API.all(URL);
            if(res){
                  if(res.error) {
@@ -26,11 +26,11 @@ const Categorie=(props)=>{
 
                     history.push('/article');
             }
-   }
+   },[URL,history])
 
    useEffect(()=>{
          init()
-   },[success])
+   },[success,init])
       return <>
               <h2>Categorie des projects</h2>
              <setion className="cardProject">

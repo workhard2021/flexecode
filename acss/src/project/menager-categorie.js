@@ -1,4 +1,4 @@
-import React,{useState,useEffect} from 'react';
+import React,{useState,useCallback,useEffect} from 'react';
 import {Link,useHistory} from 'react-router-dom';
 import '../containersite/css/cardProject.css';
 import * as API from '../api/config/api';
@@ -10,7 +10,7 @@ const MenagerCategorie=(props)=>{
    const [array,setArray]=useState([]);
    const URL="/project/all/";
 
-   const init=async ()=>{
+   const init=useCallback ( async ()=>{
            const res = await API.all(URL);
            if(res){
                  if(res.error) {
@@ -19,21 +19,21 @@ const MenagerCategorie=(props)=>{
                         setSucess(true)
             
                  }else{
-                        alert(JSON.stringify(res.data))
+                      
                  }
 
             }else {
-
                     history.push('/article');
             }
-   }
+   },[URL,history])
 
    useEffect(()=>{
          init()
-   },[success])
+   },[success,init])
+
       return <>
               <h2>Gestion des  Categories</h2>
-             <setion className="cardProject">
+             <section className="cardProject">
                 
               {array && array.map((value,index)=>{
                  return <div className="project" key={value._id}>
@@ -41,10 +41,10 @@ const MenagerCategorie=(props)=>{
                            <img id="logo_image" src={value.imageUrl} alt="logo"/>
                            <Link to={ `/project/menager-categorie/${value.categorie}`}>{value.categorie}</Link>
                        </div>
-                       <p>Vous trouverez tous les projects concernant {value.categorie}</p>
+                       <p>Tous les projects  {value.categorie}</p>
                    </div> 
               })}
-        </setion>  
+        </section>  
         </> 
 }
 export default MenagerCategorie

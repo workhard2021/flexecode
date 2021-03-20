@@ -39,6 +39,7 @@ const Update=()=>{
 
          e.preventDefault();
          setMessage('')
+         setInvalid({})
          const form_data=new FormData();
         if(data.image){
                 for(let i=0;i<data.image.length;i++){
@@ -48,16 +49,19 @@ const Update=()=>{
         form_data.append('data',JSON.stringify(data));
          const res= await API.update(form_data,URLUPDATE);
          if(res){
+
               if(res.error){
                   
                    if(inputRefFile.current){
                         inputRefFile.current.value=null;
                    }
+
                    setSuccess(true)
                    setMessage(res.data)
 
               }else{
-                  setMessage(res.data)
+
+                   setInvalid(res.data)
               }
 
          }else{
@@ -68,11 +72,12 @@ const Update=()=>{
     const init= useCallback (  async()=>{
             const res= await API.view(URL);
             if(res){
-                   if(res.error){
+              if(res.error){
                     setData(state=>{ return {...state,...res.data} });
-                }else{
-                         setMessage(res.data)
-                    }
+               }else{
+                        setMessage(res.data)
+               
+               }
               }else{
                    setMessage('Veuillez actualiser la page')
               }
@@ -80,23 +85,23 @@ const Update=()=>{
 
     useEffect(()=>{
          init()
-    },[success])
+    },[success,init])
 
-    return <setion className="formulaire">
-                <div className="title">Creer article</div>
+    return <section className="formulaire">
+                  <div className="title">Mettre à jour</div>
                <form className="login_sign" onSubmit={(e)=>send(e)}>
                    
                    <div className="item">
                              <span className="btn_redirection" onClick={()=>history.goBack()}> <i class="fas fa-times-circle"></i></span>
                    </div>
-                   { message &&
+                   { message!=='' &&
                       <div className="item">
-                            <p className={success?"valid_msg":"inValid_msg"}>{message}</p>
+                            <p className="valid_msg">{message}</p>
                       </div>
                    }
 
                    <div  className="item">
-                        <label htmlFor="select">Selection</label>
+                        <label htmlFor="select">Categorie<span className={ invalid.categorie!==undefined ? "valid":"inValid"}> {invalid.categorie}</span></label>
                           <div id="select_item">
                             <select name="categorie" id="select" value={data.categorie || ''} onChange={(e)=>saisir(e)}>
                                    <option  value='' desabled='true'>Choisir</option>
@@ -106,28 +111,27 @@ const Update=()=>{
                     </div>
 
                    <div  className="item">
-                        <label htmlFor="title">Titre <span className={1==1 ? "valid":"inValid"} > {invalid.title}</span></label>
-                        <input id="title" type="text" value={data.title} name="title" placeholder="Titre" onChange={(e)=>saisir(e)}/>
+                        <label htmlFor="title">Titre <span className={ invalid.title!==undefined ? "valid":"inValid"}> {invalid.title}</span></label>
+                        <input id="title" type="text" value={data.title || ''} name="title" placeholder="Titre" onChange={(e)=>saisir(e)}/>
                    </div>
 
                    <div  className="item">
-                        <label htmlFor="linkGithub">Link Github <span className={1==1 ? "valid":"inValid"} > {invalid.linkGithub}</span></label>
-                        <input id="linkGithub" type="text" value={data.linkGithub || ""} id="linkGithub" name="linkGithub" placeholder="Lien github"  onChange={(e)=>saisir(e)}/>
+                        <label htmlFor="linkGithub">Link Github <span className={ invalid.linkGithub!==undefined ? "valid":"inValid"}> {invalid.linkGithub}</span></label>
+                        <input id="linkGithub" type="text" value={data.linkGithub || ""} name="linkGithub" placeholder="Lien github"  onChange={(e)=>saisir(e)}/>
                    </div>
 
                    <div  className="item">
-                        <label htmlFor="linkYoutube">Lien Youtube <span className={1==1 ? "valid":"inValid"} > {invalid.linkYoutube}</span></label>
-                        <input id="linkYoutube" value={data.linkYoutube} type="text" name="linkYoutube" placeholder="lien Youtube" onChange={(e)=>saisir(e)}/>
+                        <label htmlFor="linkYoutube">Lien Youtube <span className={ invalid.linkYoutube!==undefined ? "valid":"inValid"}>  {invalid.linkYoutube}</span></label>
+                        <input id="linkYoutube" value={data.linkYoutube || "" } type="text" name="linkYoutube" placeholder="lien Youtube" onChange={(e)=>saisir(e)}/>
                    </div>
 
                    <div  className="item">
-                        <label htmlFor="image"> <span className="image" >image</span> <span className={1==2 ? "valid":"inValid"} >{images}</span></label>
+                        <label htmlFor="image"> <span className="image" >image</span> {images} </label>
                         <input id="image" type="file" name="image"  ref={inputRefFile}  onChange={(e)=>saisir(e)} />
                    </div> 
 
-
                    <div  className="item">
-                        <label htmlFor="comment">Commantaire<span className={1==2 ? "valid":"inValid"} > {invalid.comment&& 'Veuillez remplir ce champ'}</span></label>
+                        <label htmlFor="comment">Commantaire <span className={ invalid.comment!==undefined ? "valid":"inValid"}> {invalid.comment}</span></label>
                         <textarea id="comment" value={data.comment || ""} name="comment" placeholder="Ajouter commentaire" onChange={(e)=>saisir(e)}></textarea>
                    </div> 
                    <div  className="item ">
@@ -136,7 +140,7 @@ const Update=()=>{
 
                </form>
              
-        </setion>  
+        </section>  
 }
 
 export default Update;

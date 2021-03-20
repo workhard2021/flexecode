@@ -7,41 +7,35 @@ const CategorieView=(props)=>{
 
    const [array,setArray]=useState([{}]);
    const {categorie}=useParams();
-   const [success,setSuccess]=useState(false)
    const URL=`/article/categorie/${categorie}`;
    const init=useCallback(  async ()=>{
            const res = await API.view(URL);
             if(res.error){
+                setArray(res.data);  
                 
-                setArray(res.data);
-                setSuccess(true)
             }
    },[URL])
-   const redirection=(e,x)=>{
-          e.preventDefault();
-          window.location.href=x;
-   }
 
    useEffect(()=>{
          init()
-   },[success])
+   },[init])
    
   
    return <>
    <h2>{array.length>0 && array[0].categorie}</h2>
-  <setion className="cardProject">
+  <section className="cardProject">
 
      {array && array.map((value,index)=>{
-        return <div className="project" key={value._id}>
-            <div className="item">
+        return <div className="project" key={index+1}>
+              <div className="item">
                  <img id="logo_image" src={value.imageUrl} alt="logo"/>
-                 <Link className="dot-1" to={ `/article-view/${value._id}`}><strong>{value.title} </strong></Link>
-            </div>
+                 <Link className="dot-1" to={ `/article-view/${value._id || ''}`}><strong>{value.title} </strong></Link>
+              </div>
             <p>{value.comment}</p>
         </div> 
 
      })}  
-</setion>  
+</section>  
 </> 
          
 }

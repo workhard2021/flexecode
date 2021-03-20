@@ -1,21 +1,19 @@
 import React from 'react';
-import {BrowserRouter as Router, Route,Switch} from 'react-router-dom';
+import {Route} from 'react-router-dom';
 import All from './all';
 import View from './view';
 import Create from './create';
 import Update from './update';
-// import PanelArticle from './panelArticle';
+import PanelArticle from './panelArticle';
 import Categorie from './categorie';
 import CategorieView from './categorieView';
-
 import MenagerCategorieView from './menager-categorie-view';
 import MenagerCategorie from './menager-categorie';
 
 const IndexArticle=(props)=>{
 	  	      
 	  return <>
-				 {/* <PanelArticle /> */}
-		         <Switch>
+				  <PanelArticle /> 
 				   <Route exact path='/' render={(props)=> (<All {...props}/>)}/>
 		           <Route exact path='/article-view/:id' render={(props)=> (<View {...props}/>)}/>
 		           <Route exact path='/article/create' render={(props)=> (<Create {...props}/>)}/>
@@ -25,7 +23,7 @@ const IndexArticle=(props)=>{
 				   
 				   <Route exact path='/article/menager-categorie' render={(props)=> (<MenagerCategorie {...props}/>)}/>
 				   <Route exact path='/article/menager-categorie/:categorie' render={(props)=> (<MenagerCategorieView {...props}/>)}/>
-				 </Switch>
+			
 	         </>
 }
 export default IndexArticle

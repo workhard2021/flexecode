@@ -3,7 +3,7 @@ import './css/formulaire.css';
 
 const CreateArticle=(props)=>{
       
-      return <setion className="formulaire">
+      return <section className="formulaire">
                 <div className="title">Creer article</div>
                <div className="login_sign">
                    
@@ -62,6 +62,6 @@ const CreateArticle=(props)=>{
 
                </div>
              
-        </setion>   
+        </section>   
 }
 export default CreateArticle

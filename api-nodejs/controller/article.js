@@ -13,47 +13,47 @@ const all=(req,res,next)=> {
  };
 
  const view=(req,res,next)=> {
-             
- 	      modelArticle.findOne({_id:"603934d7d4cf4425e0f5ee65"}).
+               const {id}=req.params;
+        
+ 	      modelArticle.findOne({_id:id}).
  	      then(item=> {
-                   
+                
  	      	  return res.status(200).json(item)
 
  	      }).catch(e=> res.status(404).json(e))
  };
 
  const create=(req,res,next)=>{   
-    const data=JSON.parse(req.body.data);
-
+        const data=JSON.parse(req.body.data);
         const files=req.files;
-       let error={};
-       let test=' '
-        const text='Veuillez remplir le champ:';
-
+        let error={};
+        let test=false;
         if( data.title ==='' || data.title ===undefined) {
-               error.title='titre';
-              
-       }
+               error.title='Veuillez remplir le champ';
+               test=true;   
+        }
         if( data.comment ==='' || data.comment ===undefined) {
-             error.comment='commentaire';
-       }
+             error.comment='Veuillez remplir le champ';
+             test=true;
+        }
         if( data.categorie ==='' || data.categorie ===undefined) {
-                error.categorie='categorie';    
-       }
+                error.categorie='Veuillez remplir le champ';
+                test=true;   
+        }
        if( data.linkYoutube ==='' || data.linkYoutube ===undefined) {
-                error.categorie='lien youtube'; 
+                error.linkYoutube='Veuillez remplir le champ'; 
+                test=true;
        }
        if( data.linkGithub ==='' || data.linkGithub ===undefined) {
-               error.categorie='lien github';
+               error.linkGithub='Veuillez remplir le champ';
+               test=true;
+       }
+     
+       if(test){
+
+           return res.status(201).json(error);
        }
 
-       for(let key in error){
-             test+=' '+error[key];      
-       }
-      if(Object.values(error).length>0){
-           return res.status(201).json(text+test);
-       }
-      
       if(files.length>0) {
         			for(let file of files){
                                         const {path}=file;
@@ -81,32 +81,32 @@ const update=(req,res,next)=>{
     const files=req.files;
     const id=req.params.id;
     let error={};
-    let test=' '
-    const text='Veuillez remplir le champ:';
+    let test=false;
+    if( data.title ==='' || data.title ===undefined) {
+           error.title='Veuillez remplir le champ';
+           test=true;   
+    }
+    if( data.comment ==='' || data.comment ===undefined) {
+         error.comment='Veuillez remplir le champ';
+         test=true;
+    }
+    if( data.categorie ==='' || data.categorie ===undefined) {
+            error.categorie='Veuillez remplir le champ';
+            test=true;   
+    }
+   if( data.linkYoutube ==='' || data.linkYoutube ===undefined) {
+            error.linkYoutube='Veuillez remplir le champ'; 
+            test=true;
+   }
+   if( data.linkGithub ==='' || data.linkGithub ===undefined) {
+           error.linkGithub='Veuillez remplir le champ';
+           test=true;
+   }
+ 
+   if(test){
 
-        if( data.title ==='' || data.title ===undefined) {
-               error.title='#titre';
-              
-       }
-        if( data.comment ==='' || data.comment ===undefined) {
-             error.comment='#commentaire';
-       }
-        if( data.categorie ==='' || data.categorie ===undefined) {
-                error.categorie='categorie';    
-       }
-       if( data.linkYoutube ==='' || data.linkYoutube ===undefined) {
-                error.categorie='#lien youtube'; 
-       }
-       if( data.linkGithub ==='' || data.linkGithub ===undefined) {
-               error.categorie='#lien github';
-       }
-
-       for(let key in error){
-             test+=' '+error[key];      
-       }
-       if(Object.values(error).length>0){
-           return res.status(201).json(text+test);
-       }
+       return res.status(201).json(error);
+   }
 
       if(files.length>0) {
 

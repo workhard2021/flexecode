@@ -5,14 +5,10 @@ import * as API from '../api/config/api';
 const Login=(props)=>{
     const [data,setData]=useState({});
     const [message,setMessage]=useState('');
-    const [invalid,setInvalid]=useState({email:true,password:true})
-    const email='Veuillez entrer votre email';
-    const password='Veuillez entrer votre mot de passe';
-    
-   
+    const {initUser}=props;
     const history=useHistory();
     const URL='/user/login/';
-   
+
     const saisir=(e)=>{
         e.preventDefault();
         const name=e.target.name;
@@ -31,20 +27,14 @@ const Login=(props)=>{
          e.preventDefault();
          setMessage('')
          const res= await API.login(data,URL);
-     //     const test=Verifier(data,['fullName','email']);
-           
-     //     if(test.verifier){
-               //   return setInvalid(test);
-          // }
 
          if(res){
               if(res.error){
                    
-                    localStorage.setItem('user',JSON.stringify(res.data))
-                    history.push('/article');
-                    setInvalid({})
-                    setData({})
-                    
+                        localStorage.setItem('user',JSON.stringify(res.data))
+                        initUser(res.data)
+                         history.push('/article');
+                        
               }else{
                   setMessage(res.data)
               }
@@ -53,15 +43,15 @@ const Login=(props)=>{
               setMessage('Veuillez actualiser la page')
          }
     }
+     
     
-  
     return  <section  className="formulaire">
 
     <div className="title">Se connecter</div>
    <form className="login_sign" onSubmit={(e)=>send(e)} >
        
        <div className="item">
-                 <span className="btn_redirection" onClick={()=>history.push('/article')}> <i class="fas fa-times-circle"></i></span>
+                 <span className="btn_redirection" onClick={()=>history.push('/article')}> <i className="fas fa-times-circle"></i></span>
        </div>
        {message && 
          <div className="item">
@@ -69,12 +59,12 @@ const Login=(props)=>{
          </div>
        }
        <div  className="item">
-            <label htmlFor="email">Email <span className={!invalid.email? "valid":"inValid"} > {!invalid.email?email:''}</span></label>
+            <label htmlFor="email">Email </label>
             <input id="email" value={data.email || ''} type="email" name="email" placeholder="Votre email" onChange={(e)=>saisir(e)}/>
        </div>
 
        <div  className="item">
-            <label htmlFor="password">Mot de passe <span className={!invalid.password ? "valid":"inValid"} > {!invalid.password?password :''}</span></label>
+            <label htmlFor="password">Mot de passe </label>
             <input id="password" value={data.password || ''} type="password" name="password" placeholder="Mot de passe" onChange={(e)=>saisir(e)}/>
        </div>
 

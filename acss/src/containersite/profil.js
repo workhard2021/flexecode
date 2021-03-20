@@ -5,8 +5,9 @@ const Profil=(props)=>{
      const user={}
      const history=useHistory()
      const deconnexion=()=>{
-                
+                alert('dsd') 
       }
+      
       return <div className='item_user'>
               <div className='btn_home_formulaire'><i className="far fa-times-circle"></i></div>
               {1===2? <img src={user.image} alt='profil images'/> :<i class="far fa-user icon_user_annonyme"></i> }

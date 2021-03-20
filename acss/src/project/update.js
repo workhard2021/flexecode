@@ -1,11 +1,11 @@
-import React,{useState,useRef,useEffect} from 'react';
+import React,{useState,useRef,useEffect, useCallback} from 'react';
 import {useParams,useHistory} from 'react-router-dom';
 import * as API from '../api/config/api';
 import '../containersite/css/formulaire.css';
 const Update=()=>{
     const option=['php','css','java','javascript','python','nodejs','reactjs','react native'];
     const [data,setData]=useState({});
-    const [success,setSuccess]=useState(false);
+    const [invalid,setInvalid]=useState({})
     const [message,setMessage]=useState('');
     const inputRefFile=useRef(null);
     const [images,setImage]=useState('')
@@ -50,19 +50,20 @@ const Update=()=>{
                    if(inputRefFile.current){
                         inputRefFile.current.value=null;
                    }
-                   setSuccess(true)
-
+                   setInvalid({})
+               
               }else{
-                setSuccess(false)
-                  setMessage(res.data)
+                   
+                   setInvalid(res.data)
               }
 
          }else{
               setMessage('Veuillez actualiser la page')
-              setSuccess(false)
+             
          }
     }
-    const init= async()=>{
+
+    const init= useCallback(  async()=>{
             const res= await API.view(URL);
             if(res){
                    if(res.error){
@@ -74,61 +75,63 @@ const Update=()=>{
               }else{ 
                      setMessage('Veuillez actualiser la page')
               }
-    }
+    },[URL])
 
     useEffect(()=>{
          init()
-    },[success])
+    },[init])
 
-    return <setion className="formulaire">
-                <div className="title">Poste votre project</div>
-               <form className="login_sign" onSubmit={(e)=>send(e)}>
-                   
-                   <div className="item">
-                            <span className="btn_redirection" onClick={()=>history.goBack()}> <i class="fas fa-times-circle"></i></span>
-                   </div>
-                   
-                   {message &&  
-                     <div className="item">
-                       <p className={success?"valid_msg":"inValid_msg"}>{message}</p>
-                     </div>
-                    }
-                   <div  className="item">
-                        <label htmlFor="select">Selection</label>
-                          <div id="select_item">
-                            <select name="categorie" id="select" value={data.categorie || ''} onChange={(e)=>saisir(e)}>
-                                   <option  value='' desabled='true'>Choisir</option>
-                                  {option.map((value,index)=>{ return <option key={index} value={value}>{value}</option> }) }
-                             </select>
-                          </div>
-                    </div>
+    return <section className="formulaire">
+    <div className="title">Mettre à jour </div>
+   <form className="login_sign" onSubmit={(e)=>send(e)}>
+       
+       <div className="item">
+                <span className="btn_redirection" onClick={()=>history.goBack()}> <i className="fas fa-times-circle"></i></span>
+       </div>
+       
+       {message &&  
+         <div className="item">
+           <p className="valid_msg">{message}</p>
+         </div>
+        }
+       <div  className="item">
+            <label htmlFor="select">Categorie <span className={ invalid.categorie!==undefined ? "valid":"inValid"}> {invalid.categorie || ''}</span></label>
+              <div id="select_item">
+                <select name="categorie" id="select" value={data.categorie || ''} onChange={(e)=>saisir(e)}>
+                       <option  value='' desabled='true'>Choisir</option>
+                      {option.map((value,index)=>{ return <option key={index} value={value}>{value}</option> }) }
+                 </select>
+              </div>
+        </div>
 
-                   <div  className="item">
-                        <label htmlFor="title">Titre <span className={1==1 ? "valid":"inValid"} >{1==2 && "veuillez remplir ce champ"}</span></label>
-                        <input type="text" value={data.title || ""}  id="title" name="title" placeholder="Titre"  onChange={(e)=>saisir(e)}/>
-                   </div>
+       <div  className="item">
+            <label htmlFor="title">Titre <span className={ invalid.title!==undefined ? "valid":"inValid"}> {invalid.title || ''}</span></label>
+            <input type="text" value={data.title || ""}  id="title" name="title" placeholder="Titre"  onChange={(e)=>saisir(e)}/>
+       </div>
 
-                   <div  className="item">
-                        <label htmlFor="linkGithub">LinkGithub <span className={1==1 ? "valid":"inValid"} >{1==2 && 'Veuillez remplir ce champ'}</span></label>
-                        <input type="text" value={data.linkGithub || ""} id="linkGithub" name="linkGithub" placeholder="Lien github"  onChange={(e)=>saisir(e)}/>
-                   </div>
+       <div  className="item">
+            <label htmlFor="linkGithub">LinkGithub <span className={ invalid.linkGithub!==undefined ? "valid":"inValid"}> {invalid.linkGithub || ''}</span></label>
+            <input type="text" value={data.linkGithub || ""} id="linkGithub" name="linkGithub" placeholder="Lien github"  onChange={(e)=>saisir(e)}/>
+       </div>
 
-                   <div  className="item">
-                        <label htmlFor="image"> <span className="image" >image</span> <span className={1==2 ? "valid":"inValid"} >{images}</span></label>
-                        <input id="image" type="file" name="image"  Ref={inputRefFile}  onChange={(e)=>saisir(e)} />
-                   </div> 
+       <div  className="item">
+            <label htmlFor="image"> <span className="image" >image</span> {images}</label>
+            <input id="image" type="file" name="image" ref={inputRefFile}  onChange={(e)=>saisir(e)} />
+       </div> 
 
 
-                   <div  className="item">
-                        <label htmlFor="comment">Commantaire<span className={1==1 ? "valid":"inValid"} >{1==2 && 'Veuillez remplir ce champs'} </span></label>
-                        <textarea id="comment" value={data.comment || ""} name="comment" placeholder="Ajouter commentaire" onChange={(e)=>saisir(e)}> </textarea>
-                   </div> 
-                   <div  className="item ">
-                       <button>Envoyer</button>
-                   </div>
-               </form>
-             
-        </setion> 
+       <div  className="item">
+            <label htmlFor="comment">Commantaire <span className={ invalid.comment!==undefined ? "valid":"inValid"}> {invalid.comment || ''}</span></label>
+            <textarea id="comment" value={data.comment || ""} name="comment" placeholder="Ajouter commentaire" onChange={(e)=>saisir(e)}> </textarea>
+       </div> 
+       
+       <div  className="item ">
+           <button>Envoyer</button>
+       </div>
+   </form>
+ 
+</section>  
+
 }
 
 export default Update;

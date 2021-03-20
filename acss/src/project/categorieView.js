@@ -1,4 +1,4 @@
-import React,{useState,useEffect} from 'react';
+import React,{useState,useEffect, useCallback} from 'react';
 import {Link,useHistory,useParams} from 'react-router-dom';
 import '../containersite/css/cardProject.css';
 import * as API from '../api/config/api';
@@ -11,7 +11,7 @@ const CategorieView=(props)=>{
    const {categorie}=useParams();
    const URL=`/project/categorie/${categorie}`;
 
-   const init=async ()=>{
+   const init=useCallback(  async ()=>{
            const res = await API.view(URL);
            if(res){
 
@@ -22,9 +22,10 @@ const CategorieView=(props)=>{
 
             }else {
 
-                //    history.push('/article');
+                   history.push('/article');
             }
-   }
+   },[URL,history])
+
    const redirection=(e,x)=>{
            // e.preventDefault();
            window.location.href=x;
@@ -32,7 +33,7 @@ const CategorieView=(props)=>{
 
    useEffect(()=>{
          init()
-   },[success,URL])
+   },[success,init])
    
          
       return <>

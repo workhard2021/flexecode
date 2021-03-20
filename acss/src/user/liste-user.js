@@ -1,4 +1,4 @@
-import React,{useState,useEffect} from 'react';
+import React,{useState,useEffect, useCallback} from 'react';
 import {Link} from 'react-router-dom';
 import '../containersite/css/liste-article.css';
 import * as API from '../api/config/api';
@@ -11,12 +11,12 @@ const ListeUser=(props)=>{
    const [message,setMessage]=useState('');
    
    const URL=`/user/all`;
-   const init= async ()=>{
+   const init=useCallback(  async ()=>{
            const res = await API.view(URL);
             if(res.error){
                 setArray(res.data);
             }
-   };
+   },[URL]);
 
    const destroy= async (id)=> {
            
@@ -53,39 +53,40 @@ const ListeUser=(props)=>{
    useEffect(()=>{
           init()
          
-   },[success])
+   },[success,init])
   
       
-    return <setion className="list">
-                
+    return <section className="list">
+                <form>
+                        <input type="text" name="search" placeholder={placeholder}/>
+                        <button><i className="fas fa-search"></i></button>
+                </form>
+                <div className={message? 'valide':'invalid'}> {message}</div>
                 <table>  
                     <caption>Liste des utilisateurs</caption>
-                    <div className={message? 'valide':'invalid'}> {message}</div>
-                    <form>
-                        <input type="text" name="search" placeholder={placeholder}/>
-                        <button><i class="fas fa-search"></i></button>
-                    </form>
                     <thead>
                         <tr>
                            <th>N°</th>
                          
                            <th>Voir</th>
                            <th>Modifier</th>
+                           <th>Supprimer</th>
                            <th>Action</th>
                         </tr>
                     </thead>
                     <tbody>
-                    {array && array.map(value=> {
+                    {array && array.map((value,index)=> {
                            
                        return <tr key={value._id}>
-                            <td><a href="#">1</a></td>
+                            <td><Link to="#">{index+1}</Link></td>
                             <td><Link to={`/user/profil/${value._id}`}><img  src="/image/r1.jpg" alt="tag" /></Link></td>
-                            <td><Link to="#"  onClick={(e)=>destroy(value._id)}><i class="fas fa-edit" >Delete</i></Link></td>
+                            <td><Link  to={`/user/update-profil/${value._id}`} ><i className="fas fa-edit" >Modifier</i></Link></td>
+                            <td><Link to="#" onClick={(e)=>destroy(value._id)}><i className="fas fa-edit" >Delete</i></Link></td>
                             <td><Link  to="#" onClick={(e)=>deni(value._id)}>{value.deni? 'Bloquer':'Debloquer'}</Link></td>
                         </tr>
                        })}
                     </tbody>
                 </table>
-        </setion>   
+        </section>   
 }
 export default ListeUser

@@ -6,7 +6,6 @@ const Sign=(props)=>{
 
     const [data,setData]=useState({});
     const [invalid,setInvalid]=useState({});
-    const [success,setSuccess]=useState(false);
     const [message,setMessage]=useState('');
     const inputRefFile=useRef(null);
     const history=useHistory();
@@ -37,12 +36,11 @@ const Sign=(props)=>{
                    if(inputRefFile.current){
                         inputRefFile.current.value=null;
                    }
-                   setSuccess(true)
-                   setData(()=>{return {}})
-                   setInvalid(()=>{return {}})
+                    setData({})
+                    setInvalid({})
 
               }else{
-                  setMessage(res.data)
+                    setInvalid(res.data)
               }
 
          }else{
@@ -52,28 +50,28 @@ const Sign=(props)=>{
   
    return  <section  className="formulaire">
 
-    <div className="title">S'inscrire</div>
+   <div className="title">S'inscrire</div>
    <form className="login_sign" onSubmit={(e)=>send(e)} >
        
        <div className="item">
-                 <span className="btn_redirection" onClick={()=>history.push('/article')}> <i class="fas fa-times-circle"></i></span>
+                 <span className="btn_redirection" onClick={()=>history.push('/article')}> <i className="fas fa-times-circle"></i></span>
        </div>
        {message && 
          <div className="item">
-                <p className={success? "valid_msg":"inValid_msg"}>{message}</p>
+                <p className="valid_msg">{message}</p>
          </div>
        }
        <div  className="item">
-            <label htmlFor="email">Email <span className={1==1 ? "valid":"inValid"} > {invalid.email}</span></label>
+            <label htmlFor="email">Email <span className={ invalid.email!==undefined ? "valid":"inValid"}> {invalid.email}</span></label>
             <input id="email" value={data.email || ''} type="email" name="email" placeholder="Votre email" onChange={(e)=>saisir(e)}/>
        </div>
 
        <div  className="item">
-            <label htmlFor="fullName">Nom utilisateur <span className={1==1 ? "valid":"inValid"} >{invalid.fullName}</span></label>
+            <label htmlFor="fullName">Nom utilisateur <span className={ invalid.fullName!==undefined ? "valid":"inValid"}> {invalid.fullName}</span></label>
             <input id="fullName" value={data.fullName || ''} type="text" name="fullName" placeholder="Nom utilisateur" onChange={(e)=>saisir(e)}/>
        </div>
        <div  className="item">
-            <label htmlFor="password">Mot de passe <span className={1==1 ? "valid":"inValid"} > {invalid.password}</span></label>
+            <label htmlFor="password">Mot de passe <span className={ invalid.password!==undefined ? "valid":"inValid"}> {invalid.password}</span></label>
             <input id="password" value={data.password || ''} type="password" name="password" placeholder="Mot de passe" onChange={(e)=>saisir(e)}/>
        </div>
 

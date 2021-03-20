@@ -23,39 +23,44 @@ const all=(req,res,next)=> {
  };
 
  const create=(req,res,next)=>{   
-      let data=JSON.parse(req.body.data);
-        data.idUser='123';
+       let data=JSON.parse(req.body.data);
+
        const files=req.files;
        let error={};
-	   let test=' ';
-	   const text='Veuillez remplir le champ:';
+	   let test=false;
 		 
 	    if( data.title ==='' || data.title ===undefined) {
-				  error.title='titre';
+				  error.title='Veuillez remplir le champ';
+                  test=true;
 				 
 		 }
 		  
 	    if( data.categorie ==='' || data.categorie ===undefined) {
-				   error.categorie=', categorie';    
+              error.categorie='Veuillez remplir le champ';
+              test=true; 
 	    }
    
     	if( data.linkGithub ==='' || data.linkGithub ===undefined) {
-				error.linkGithub=', lien github';    
+                error.linkGithub='Veuillez remplir le champ';
+                test=true;  
 	    }
+        
+        if( data.comment ==='' || data.comment ===undefined) {
+            error.comment='Veuillez remplir le champ';
+          test=true;  
+        }
+
+        if(test){
+ 
+            return res.status(201).json(error);
+        }
 	   
-		for(let key in error){
-				test+=' '+error[key];      
-	    }
    
-		if(Object.values(error).length>0){
-			  return res.status(201).json(text+test);
-	    }
-	   
         if(files.length>0) {
         			for(let file of files){
                                         const {path}=file;
         				   upload(path,'project').then(result=>{
-        						 modelProject.insertMany({...data,cloud_id:result.public_id,imageUrl:result.url,dateInsert:Date.now()})
+        						 modelProject.insertMany([{...data,cloud_id:result.public_id,imageUrl:result.url,dateInsert:Date.now()}])
         						 .then(item=>{
         						        return  res.status(200).json('Votre poste a été crée ')
         						  }).catch(e=> res.status(404).json(e.message))
@@ -63,7 +68,7 @@ const all=(req,res,next)=> {
         				   fs.unlinkSync(path)
         			   } 
         }else{
-               modelProject.insertMany({...data,imageUrl:'a.jpg',dateInsert:Date.now()})
+               modelProject.insertMany([{...data,imageUrl:'a.jpg',dateInsert:Date.now()}])
                        .then(item=>{
                         return res.status(200).json('Votre project a été crée')
                }).catch(e=> res.status(404).json(e.message))
@@ -78,30 +83,36 @@ const update=(req,res,next)=>{
     const files=req.files;
     const id=req.params.id;
     let error={};
-    let test=' ';
-    const text='Veuillez remplir le champ:';
-	  
-        if( data.title ==='' || data.title ===undefined) {
-               error.title='titre';
+    let test=false;
+      
+     if( data.title ==='' || data.title ===undefined) {
+               error.title='Veuillez remplir le champ';
+               test=true;
               
-        }
+      }
        
-	    if( data.categorie ==='' || data.categorie ===undefined) {
-                error.categorie=', categorie';    
-       }
+     if( data.categorie ==='' || data.categorie ===undefined) {
+           error.categorie='Veuillez remplir le champ';
+           test=true; 
+     }
 
-	   if( data.linkGithub ==='' || data.linkGithub ===undefined) {
-		     error.linkGithub=', lien github';    
-       }
+     if( data.linkGithub ==='' || data.linkGithub ===undefined) {
+             error.linkGithub='Veuillez remplir le champ';
+             test=true;  
+     }
+
+     if( data.comment ==='' || data.comment ===undefined) {
+          error.comment='Veuillez remplir le champ';
+        test=true;  
+      }
+
+
+     if(test){
+
+         return res.status(201).json(error);
+     }
     
-       for(let key in error){
-             test+=' '+error[key];      
-       }
-
-       if(Object.values(error).length>0){
-           return res.status(201).json(text+test);
-       }
-	   
+     
 
       if(files.length>0) {
 
@@ -126,7 +137,6 @@ const update=(req,res,next)=>{
    
  };
 
-
 const destroy=(req,res,next)=>{
         const {id}=req.params;
         modelProject.findOne({_id:id})
@@ -144,7 +154,7 @@ const destroy=(req,res,next)=>{
 
  const categorie=(req,res,next)=> {
 
-         modelProject.find({categorie:req.params.categorie}).sort({title:-1})
+         modelProject.find({categorie:req.params.categorie}).sort({_id:-1})
  	      .then(item=>{
 
  	      	  res.status(200).json(item)

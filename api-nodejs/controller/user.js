@@ -11,42 +11,41 @@ const sign=(req,res,next)=>{
        let data=req.body;
 	   data.deni=false;
 	   data.connexion=false;
-	   data.role='user';
-	   let error=false;
-	   let test='';
+	   data.role='admin';
+	   let error={};
+       let test=false;
 
-     
-     if(data.password ==='' || data.password===undefined ){
-
-     	  test+='#Entrez votre mot de passe';
-		   error=true;
-     }
-	 if(data.password.length<6){
-
-		test+='#Mot de passe doit être moins de 6 caractères';
-		error=true;
+    if(!ValidationMail(data.email) ) {
+            error.email='Veuillez remplir le champ';
+            test=true;   
     }
-     
-     if(!ValidationMail(data.email)) {
-     	 test+='#Votre email est invalide';
-		  error=true;
-     }
 
-     if (data.fullName==='' || data.fullName===undefined) {
+   if( data.password ==='' || data.password ===undefined) {
+            error.password='Veuillez remplir le champ'; 
+            test=true;
+			
+   }else if(data.password.length<6){
 
-          test+='#Votre nom utilisateur';
-		  error=true;
-     }
-	  if(error){ 
+	       error.password='Le mot de passe doit être supperieur à six caractères';
+		   test=true;
+   }
 
-     	   return res.status(201).json(test);
-      }
+   if( data.fullName ==='' || data.fullName ===undefined) {
+           error.fullName='Veuillez remplir le champ';
+           test=true;
+   }
+   
+ 
+   if(test){
+
+       return res.status(201).json(error);
+   }
 	  
    
      modelUser.find({email:data.email}).then(item=>{
 
       	     if(item.length>0) {
-      	     	 res.status(201).json('Cet email existe déja')
+      	     	 res.status(201).json({email:'cet email existe déja'})
       	     }else {
 
 		      bcrypt.hash(data.password,salt)
@@ -65,26 +64,27 @@ const sign=(req,res,next)=>{
       }).catch(e=>res.status(404).json(e.message))
 };
 
+
 const login=(req,res,next)=>{
 
        let data=req.body;
 
     if(!ValidationMail(data.email)) { 
 
-	 	   return res.status(201).json('Email est invalide')
+	 	   return res.status(201).json('Email ou mot de passe est incorrecte')
 	 }
 
 	 modelUser.findOne({email:data.email}).then((item)=>{
 	
 	    if(item!==null) { 
 			
-	    	    bcrypt.compare(data.password,item.password)
+	    	    bcrypt.compare(data.password,item._doc.password)
 			    .then(valid=> {
 					
 			  	   if(valid) {
 				           const TOKEN_SECRET=item._doc.fullName;
 						   
-		                   jwt.sign({idUser:item._doc._id},TOKEN_SECRET,{expiresIn:'1h'},(error,token)=>{
+		                   jwt.sign({idUser:item._doc._id},TOKEN_SECRET,{expiresIn:'5h'},(error,token)=>{
 							   
 		                	   if(error){
 								   
@@ -119,10 +119,16 @@ const login=(req,res,next)=>{
 };
 
 const view=(req,res,next)=>{
-
+	
 	    modelUser.findOne({_id:req.params.id}).then((item)=> {
-
-	            return res.status(200).json(item)
+			
+                if(item){
+					 delete item._doc.password;
+					 return res.status(200).json(item)
+				}else {
+					return res.status(200).json({})
+				}
+	            
 
         }).catch( e => res.status(404).json(e.message) )
 };
@@ -136,41 +142,84 @@ const all= (req,res,next)=>{
         }).catch( e => res.status(404).json(e.message))  
 }
 
-const update=(req,res,next)=> {
-       
+const update= async (req,res,next)=> {
+
     let data=JSON.parse(req.body.data);	
+	const {id}=req.params;
     const files=req.files;
-	const token=jwt.sign({idUser:data._id},data.fullName,{expiresIn:'1h'});
-	const user={...data,token:token}
+	let error={};
+	let test=false;
 	
     if(!ValidationMail(data.email)) { 
 
-    	  return  res.status(201).json({message:'Email est invalide'})
+		error.email='Email est incorrect';
+		test=true;
     }
+	if(data.fullName ==='' || data.fullName===undefined){
+		error.email='Veuillez remplir le champ';
+		test=true;
+	}
    
-	if(data.password) { 
+	
+	 const count = await modelUser.findOne({email:data.email});
+		   
+	  if(count !==null){
+		
+			    if(count._id!=id){ 
+				     error.email= data.email+' existe déja';
+					 test=true;
+				}
+	   }
+	  
+	   if(data.password !==null && data.password!==undefined) { 
 
-          if(data.password.length>0 && data.password<=6){
+		if(data.password.length<6){
 
-    	      return res.status(201).json('Le mot de passe doit être superieur 5 caractères')
-        }
-    }
+		  error.password='Le mot de passe doit être superieur 5 caractères';
+		  test=true;
+		}
+
+		if(data.password2 !==null && data.password2!==undefined) { 
+			const password2= await bcrypt.compare(data.password2,count.password);
+			if(!password2){
+				  error.password2='Ancien mot de passe est incorrect';
+				  test=true;
+		    }
+
+		 }
+
+      }
+	   
+ 
+
+	 if(test) {
+
+		   return res.status(201).json(error)
+      }
 
 
+	  
     if(files.length>0) {
-
+		
     	  for (let file of files) {
-
+			
     	  	     const {path}=file;
+				 
     	  	     upload(path,(result)=> {
+				 
                        if(data.password){
-							    
+							
 	    	  	     	 bcrypt.hash(data.password,salt).then(hash=> {
 
-							modelUser.updateOne({_id:data._id},{$set:{...data,cloud_id:result.public_id,imageUrl:result.url,password:hash}})
+							modelUser.updateOne({_id:id},{$set:{...data,cloud_id:result.public_id,imageUrl:result.url,password:hash}})
 							  .then(item => {
-                                          delete user.password;
+
+										  const token=jwt.sign({idUser:id},data.fullName,{expiresIn:'1h'});
+	                                      const user={...data,token:token}
+										  delete user.password;
 										  delete user.password2;
+										 
+
 								  return  res.status(200).json({message:'Mise à jour a été effectuéé',user:user}) 
    
 							  }).catch(e=> res.status(404).json(e.message))
@@ -178,18 +227,27 @@ const update=(req,res,next)=> {
 						  }).catch(e=> res.status(404).json(e.message))
 					   
 						}else{
-
-							modelUser.updateOne({_id:data._id},{$set:{...data,cloud_id:result.public_id,imageUrl:result.url,password:hash}})
+							
+							modelUser.updateOne({_id:id},{$set:{...data,cloud_id:result.public_id,imageUrl:result.url,password:hash}})
 							  .then(item => {
-								       delete user.password;
-								       delete user.password2;
+								
+								const token=jwt.sign({idUser:id},data.fullName,{expiresIn:'1h'});
+								const user={...data,token:token}
+								delete user.password;
+								delete user.password2;
+								
+
 								  return  res.status(200).json({message:"Mise à jour a été éffectuée",user:user}) 
    
 							  }).catch(e=> res.status(404).json(e.message))							  
 						}
 	                  
     	  	     })
-			     destroy_cloud(data.cloud_id)
+
+				if(data.cloud_id){
+					destroy_cloud(data.cloud_id)
+				}
+			     
 
     	   }
 
@@ -200,10 +258,14 @@ const update=(req,res,next)=> {
 		   if(data.password){
 		     	bcrypt.hash(data.password,salt).then(hash=> {
 
-				modelUser.updateOne({_id:data._id},{$set:{...data,password:hash}})
+				modelUser.updateOne({_id:id},{$set:{...data,password:hash}})
 				  .then(item =>{
-					         delete user.password;
-					        delete user.password2;
+					
+					const token=jwt.sign({idUser:id},data.fullName,{expiresIn:'1h'});
+					const user={...data,token:token}
+					delete user.password;
+					delete user.password2;
+
 					  return  res.status(200).json({message:"Mise à jour a été éffectuée",user:user}) 
 					 
 				  }).catch(e=> res.status(404).json(e.message))
@@ -212,10 +274,14 @@ const update=(req,res,next)=> {
 
 		   }else{
 
-				  modelUser.updateOne({_id:data._id},{$set:{...data}})
+				  modelUser.updateOne({_id:id},{$set:{...data}})
 				  .then(item =>{
-					         delete user.password;
-				          	delete user.password2;
+				
+					const token=jwt.sign({idUser:id},data.fullName,{expiresIn:'1h'});
+					const user={...data,token:token}
+					delete user.password;
+					delete user.password2;
+
 					  return  res.status(200).json({message:"Mise à jour a été éffectuée",user:user}) 
 					 
 				  }).catch(e=> res.status(404).json(e.message))
