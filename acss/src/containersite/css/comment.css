@@ -115,6 +115,16 @@
     text-align:justify;
    
 }
+/* form_commentaire */
+#form_commentaire{
+    width:100%;
+}
+
+#form_commentaire #btn_item{
+     flex-direction:row;
+     justify-content:space-evenly;
+}
+
 @media screen and (max-width:980px){
     .comment #item p{
         position:relative;

@@ -7,8 +7,7 @@ const Categorie=(props)=>{
 
    const [success,setSucess]=useState(false);
    const history=useHistory();
-   const [array,setArray]=useState([]);
-  
+   const [array,setArray]=useState([]);  
    const URL="/project/all/";
 
    const init=useCallback(  async ()=>{
@@ -16,8 +15,9 @@ const Categorie=(props)=>{
            if(res){
                  if(res.error) {
                         const categories= res.data.filter((values,index)=>index===res.data.findIndex( (value,index)=>value.categorie===values.categorie))   ;
-                        setArray(categories);
-                         setSucess(true)
+                       
+                                setArray(categories);
+                                setSucess(true);
                  }else{
                         alert(JSON.stringify(res.data))
                  }
@@ -33,7 +33,7 @@ const Categorie=(props)=>{
    },[success,init])
       return <>
               <h2>Categorie des projects</h2>
-             <setion className="cardProject">
+             <section className="cardProject">
                 
               {array && array.map((value)=>{
                  return <div className="project" key={value._id}>
@@ -44,7 +44,7 @@ const Categorie=(props)=>{
                        <p>Vous trouverez tous les projects concernant {value.categorie}</p>
                    </div> 
               })}
-        </setion>  
+        </section>  
         </> 
 }
 export default Categorie

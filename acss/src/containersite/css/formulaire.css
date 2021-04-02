@@ -1,28 +1,31 @@
 .formulaire{
-    position:relative;
+     position:relative;
      display: flex;
-     justify-content:space-around;
+     justify-content:center;
      flex-direction:column;
      align-items:center;
      width:100%;
+     padding:0px;
+     margin:0px;
      background-color:gainsboro;
 }
 .formulaire .title{
       font-size:2em;
       text-align:center;
       padding:10px;
+      width:100%;
       box-sizing:border-box;
       font-family:sans-serif;
       color:rgb(255, 255, 255);
 }
 .formulaire .login_sign {
      position:relative;
-     width:500px;
+     width:450px;
      display:flex;
      flex-direction:column;
      justify-content:center;
      align-items:center;
-     background:white
+     background:white;
 }
 .formulaire .login_sign .item{
     position:relative;
@@ -33,6 +36,8 @@
     flex-direction:column;
     margin:auto;
     padding:10px;
+    box-sizing:border-box;
+    flex:1;
 }
 .formulaire .login_sign .item label{
     display:block;
@@ -88,11 +93,11 @@
      max-width:90%;
 }
 .formulaire .login_sign .item button{
-    width:150px;
+      width:150px;
      font-size:1.2em;
-     padding:10px;
+     padding:5px;
      margin:auto;
-     cursor: pointer;
+     cursor:pointer;
      border:none;
      border-radius:2px;
      opacity:0.8;
@@ -125,8 +130,9 @@
      padding:2px;
 }
 .formulaire .inValid_msg{
-    color:rgb(235, 94, 94);
-    background-color:yellowgreen;
+    
+    background-color:rgb(178, 224, 178);
+    text-align:center;
 }
  .formulaire .valid_msg{
      font-size:1.5em;
@@ -137,5 +143,12 @@
 .formulaire .valid{
      background-color:initial;
      color:rgb(235, 94, 94);
-     font-size:0.9em;
+     font-size:1em;
+     text-align:center;
+     margin:0px;
+}
+@media screen and (max-width:700px){
+     .formulaire .login_sign{
+           width:350px;
+     }
 }

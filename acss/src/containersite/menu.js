@@ -1,6 +1,5 @@
 import React, { useState,useEffect} from 'react';
-import {Link} from 'react-router-dom';
-
+import {Link,useHistory} from 'react-router-dom';
 import * as API from '../api/config/api';
 import './css/menu.css';
 const Menu=(props)=>{
@@ -10,7 +9,8 @@ const Menu=(props)=>{
         const [categorie,setCategorie]=useState([]);
         const [recent,setRecent]=useState([])
         const [success,setSuccess]=useState(false)
-        const {user}=props;
+        const {user,initUser}=props;
+        const history=useHistory();
         const url="/article/all/";
         
         const init=async ()=>{
@@ -19,12 +19,22 @@ const Menu=(props)=>{
                        const ctg= res.data.filter((values,index)=>index===res.data.findIndex( (value,index)=>value.categorie===values.categorie))   ;
                        setCategorie(ctg);
                        setRecent(res.data.slice(0,5));
-                        setSuccess(true)
+                       setSuccess(true)
                  }
         }
 
+        const logOut= async ()=>{
+             
+              const res=await API.deconnexionDeni(`/user/deconnexion/${user._id}`);
+              if(res.error){
+                     
+                     localStorage.removeItem('user')
+                     history.push('/');
+                     initUser({})
+              }
+
+            }
       
-     
         useEffect(()=>{
               init()
         },[success])
@@ -84,7 +94,11 @@ const Menu=(props)=>{
                     
                    </div>
                   :  <div className="connexion"> 
-                         <Link to={`/user/profil/${user._id}`}><i className="far fa-user"></i></Link>
+                        <Link to="/" id="icone">
+                              <i className={!open.search?"fas fa-search" : "fas fa-times"}  onClick={()=>setOpen((state)=>{ return {...state,search:!state.search,login:false} })}></i>
+                       </Link>
+                        <Link to={`/user/profil/${user._id}`}> { user.imageUser? <img src={user.imageUser} alt="logo"/>:<i className="far fa-user"></i>}</Link>
+                        <Link to="/user/login" id={open.login? "login":''}  onClick={()=>logOut()}>deconnexion</Link>
                      </div>
                   }
                

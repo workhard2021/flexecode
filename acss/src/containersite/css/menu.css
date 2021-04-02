@@ -237,6 +237,15 @@ nav .connexion  i{
 #search_header li{
        width:30em;
 }
+.connexion img{
+        width:50px;
+        height:50px;
+        border-radius:50%;
+        cursor:pointer;
+}
+.connexion a{
+        font-size:1em;
+}
 #search_header li a{
        position:relative;
        display:inline-block;

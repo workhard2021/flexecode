@@ -60,15 +60,15 @@ const all=(req,res,next)=> {
         				   upload(path,'image').then(result=>{
         						   modelArticle.insertMany({...data,cloud_id:result.public_id,imageUrl:result.url,dateInsert:Date.now()})
         						   .then(item=>{
-        						          res.status(200).json('Votre article a été crée ')
+        						          res.status(200).json('Article a été crée')
         						   }).catch(e=> res.status(404).json(e.message))
         				   })
         				   fs.unlinkSync(path)
         			   } 
       }else{
-               modelArticle.insertMany({...data,imageUrl:'a.jpg',dateInsert:Date.now()})
+               modelArticle.insertMany({...data,imageUrl:'r1.jpg',dateInsert:Date.now()})
                        .then(item=>{
-                          res.status(200).json('Votre article a été crée')
+                          res.status(200).json('Article a été crée')
                }).catch(e=> res.status(404).json(e.message))
       }
 
@@ -119,11 +119,11 @@ const update=(req,res,next)=>{
                           res.status(200).json('Mise à jour a été effectuée')
                        }).catch(e=> res.status(404).json(e.message))
                    })
-                   fs.unlinkSync(path)
+                   fs.unlinkSync(path);
               } 
               
       }else{
-               modelArticle.updateOne({_id:id},{...data,imageUrl:'a.jpg',dateInsert:Date.now()})
+               modelArticle.updateOne({_id:id},{...data,dateInsert:Date.now()})
                        .then(item=>{
                           res.status(200).json('Mise à jour a été effectuée')
                }).catch(e=> res.status(404).json(e.message))
@@ -162,12 +162,11 @@ const destroy=(req,res,next)=>{
  };
 
  const search=(req,res,next)=> {
-  
+
  	    const data=req.params.title;
-      const regex=new RegExp('^'+data+'*','i');
+            const regex=new RegExp('^'+data+'*','i');
  	    modelArticle.find({$or:[{title:regex},{comment:regex}]}).sort({title:1}).limit(15)
  	    .then(item=> {
-
  	    	      return  res.status(200).json(item)
 
  	    }).catch(e=> res.status(404).json(e.message))

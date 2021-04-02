@@ -1,95 +1,180 @@
-const {modelCommentaire}=require('../model/model');
-const { v4:uuidv4} = require('uuid');
+const {modelCommentaire, modelUser}=require('../model/model');
+const {ValidationMail}=require('../middleware/middleware');
+const model = require('../model/model');
+const user = require('./user');
+// const { v4:uuidv4} = require('uuid');
 
+ const view= async (req,res,next)=> {
+    try{ 
+         const {id}=req.params;
+         let objt={},array_=[],array=[];
+         const items= await modelCommentaire.find({idArticle:id}).sort({_id:-1});
+         let users= await modelUser.find();
+         
+          for (item of items){
+                   const {idUser}=item;
+                   const idC=item._id;
+                   const {commentItem}=item;
+                   
+                   for(let user of users){
+                      
+                        const _id=user._doc._id;      
+                        if(_id==idUser){
+                              
+                              for (comment of commentItem){
+                                 const {idUser}=comment;
 
-const all=(req,res,next)=> {
+                                 if(idUser==_id){
+                                     
+                                     array_=[...array_,{...comment,
+                                      fullName:user.fullName,email:user.email,imageUser:user.imageUser}];    
+             
+                                 }
+                               }
+              
+                               objt={...item._doc,email:user.email,fullName:user.fullName,imageUser:user.imageUser,_id:idC,commentItem:array_}; 
+                               array.push(objt); 
+                        }
+                        
+                   } 
+                     // commentItem   
+          }
+          return res.status(200).json(array);
+     }
 
-        modelCommentaire.find().sort({_id:-1})
-        .then(item=>{
+     catch(e) {
+      console.log(e)
 
-            return res.status(200).json(item)
-
-        }).catch(e=> res.status(404).json({message:e.message}))
+          return res.status(404).json(e);
+    }
+      
  };
 
- const view=(req,res,next)=> {
 
-        modelCommentaire.findOne({_id:req.params.id}).
-        then(item=> {
+const create= async (req,res,next)=> {
+   
 
-            return res.status(200).json(item)
-
-        }).catch(e=> res.status(404).json(e))
- };
-
-
-const create=(req,res,next)=> {
-
-    const data=req.body;
-    if(data.comment!=='' && data.comment !==undefined) { 
-       
-       return res.status(201).json('Votre commentaire est vide')
+   try{ 
+    const data= req.body;
+   
+    if(data.idUser==='' || data.idUser ===undefined) { 
+        return res.status(201).json({msg:'Veuillez vous connecter pour postuler'});
+    }
+   
+    if(data.comment==='' || data.comment ===undefined) { 
+       return res.status(201).json({msg:'Votre commentaire est vide'});
     }
 
-    if(ValidationMail(data.email)) { 
-
-       return  res.status(201).json('Email est invalide')
-    } 
-    modelCommentaire.insertMany({...data,dateInsert:Date.now()})
-    .then(item=> {
-
-        return res.status(200).json('Commentaire a été envoyé')
-
-    }).catch(e=>{ res.status(404).json(e.message)})
+    if(data.comment.length<5){
+      return res.status(201).json({msg:'la taille de commentaire doit être supperieur à 4 caractères'});
+    }
+   
+   const item = await modelCommentaire.create({idArticle:data.idArticle,idUser:data.idUser,comment:data.comment,commentItem:[],like:[],dateInsert:Date.now()});
+       
+      return res.status(200).json({msg:'Commentaire a été envoyé',data:item[0]});
+   }
+   catch(e){
+           
+           return res.status(404).json(e);
+    }
+    
+    
  }
 
 
- const update=(req,res,next)=> {
+ const update= async (req,res,next)=> {
 
-    const data=req.body;
-    data.id=uuidv4();
+   try{ 
+  
+      const data= req.body;
+      const {idArticle,idCommentaire}=data;
+      delete data.idArticle;delete data.idCommentaire;
+      let array=[];
+   
+      if(data.idUser==='' || data.idUser ===undefined) { 
+          return res.status(201).json({msg:'Veuillez vous connecter pour postuler'});
+      }
+     
+      if(data.comment==='' || data.comment ===undefined) { 
+         return res.status(201).json({msg:'Votre commentaire est vide'});
+      }
+  
+      if(data.comment.length<5){
+        return res.status(201).json({msg:'la taille de commentaire doit être supperieur à 4 caractères'});
+      }
+     
+    const c= await modelCommentaire.findOne({_id:idCommentaire,idArticle:idArticle});
+    if(c.commentItem.length>0) {
 
-    if(data.comment!=='' && data.comment !==undefined) { 
-       
-       return res.status(201).json('Votre commentaire est vide')
+        array=[...c.commentItem,{...data,dateInsert:Date.now()}];
+    }else{
+       array=[{...data,dateInsert:Date.now()}];
     }
+     
+     const item = await modelCommentaire.updateOne({_id:idCommentaire},{$set:{commentItem:array} });
+     return res.status(200).json({msg:'Commentaire a été envoyé'});
+   }
 
-    if(ValidationMail(data.email)) { 
-
-       return  res.status(201).json('Email est invalide')
-    } 
-
-    modelCommentaire.findOne({_id:data._id,idArticle:idArticle}).then(item=>{
-          
-         const update={item,commentItem:[...item.commentItem,data]}
-         modelCommentaire.updateOne({_id:_id},{$set:update})
-         .then(item=>{
-                return res.status(200).json('Commenté')
-         })
-
-    }).catch(e=>res.status(404).json(e))
+   catch(e){
+             console.log(e)
+           return res.status(404).json(e);
+    }
 
  }
 
- const destroy=(req,res,next)=>  {
+ const destroy= async (req,res,next)=>  {
+      const {id}=req.params;
+      try{ 
+            const item= await modelCommentaire.deleteOne({_id:id});
+         
+            return res.status(200).json('Commentaire a été supprimé');
+     }
+     catch(e) {
+
+           return res.status(404).json(e);
+     }
+}
+
+const like= async (req,res,next)=>  {
+
+   const {data}=req.params;
+   const {id,idUser}=JSON.parse(data);
+
+   let like=[];
+   let a='';
+  
+   try{ 
+         
+         const c= await modelCommentaire.findOne({_id:id});
+ 
+         if(c){
+               
+                   const index=c.like.findIndex(value=> value.idUser===idUser);
+                   if(index !=-1){
+
+                     like=c.like.filter((value,index)=>value.idUser != idUser );
+
+                   }else{
+                     like=[...c.like,{idUser:idUser}]; 
+                   }          
+         }
           
-      modelCommentaire.deleteOne({_id:eq.params.data._id}).then(item=> {
-                 
-                 console.log(item)
-                 return res.status(200).json('Commentaire a été supprimé');
-
-      }).catch(e=> res.status(404).json(e.message))
-
+         a= await modelCommentaire.updateOne({_id:id},{$set:{like:like} }); 
+       
+         return res.status(200).json('like et dislike');
+  }
+  catch(e) {
+   console.log(e)
+        return res.status(404).json(e);
+  }
 }
 
 module.exports={
       create:create,
-      all:all,
       update:update,
       view:view,
-      search:search,
       destroy:destroy,
-      all:all
+      like:like
 };
 
 

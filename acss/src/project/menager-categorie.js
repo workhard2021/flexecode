@@ -4,28 +4,31 @@ import '../containersite/css/cardProject.css';
 import * as API from '../api/config/api';
 
 const MenagerCategorie=(props)=>{
-
+   const {user}=props;
    const [success,setSucess]=useState(false);
    const history=useHistory();
    const [array,setArray]=useState([]);
    const URL="/project/all/";
-
    const init=useCallback ( async ()=>{
            const res = await API.all(URL);
            if(res){
                  if(res.error) {
-                        const categories= res.data.filter((values,index)=>index===res.data.findIndex( (value,index)=>value.categorie===values.categorie))   ;
-                        setArray(categories);
-                        setSucess(true)
-            
-                 }else{
-                      
+                     
+                        const categories= res.data.filter((values,index)=>index===res.data.findIndex( (value,index)=>value.categorie===values.categorie));
+                        if(user.role!=='admin') { 
+                                const array_cm=categories.filter(value=>value.idUser===user._id);
+                                setArray(array_cm)
+                                setSucess(true);
+                        }else {
+                                setArray(categories);
+                                setSucess(true);
+                        }
                  }
 
             }else {
                     history.push('/article');
             }
-   },[URL,history])
+   },[URL,history,user._id,user.role])
 
    useEffect(()=>{
          init()

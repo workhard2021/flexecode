@@ -5,9 +5,8 @@ const PanelUser=(props)=>{
    
 
   return <section className="panel">
-            <h1>Menager user</h1>
             <ul>
-              <li><Link to='/user/liste-user/'>Menager utilisateur</Link></li>
+              <li><Link to='/user/liste-user/'>Utilisateur</Link></li>
             </ul>  
        </section>
 

@@ -1,10 +1,8 @@
 import React,{useState,useRef,useEffect, useCallback} from 'react';
-import {useParams,useHistory} from 'react-router-dom';
 import '../containersite/css/formulaire.css';
 import * as API from '../api/config/api';
 
 const UpdateProfil=(props)=>{
-
     const [data,setData]=useState({});
     const [success,setSuccess]=useState(false);
     const [message,setMessage]=useState('');
@@ -12,11 +10,9 @@ const UpdateProfil=(props)=>{
     const {initUser}=props;
     const inputRefFile=useRef(null);
     const [invalid,setInvalid]=useState({})
-    const history=useHistory();
-    const {id}=useParams();
+    const {id}=props;
     const URL=`/user/view/${id}`;
     const URLUPDATE=`/user/update/${id}`;
-
     const saisir=(e)=>{
           e.preventDefault();
           const name=e.target.name;
@@ -36,15 +32,15 @@ const UpdateProfil=(props)=>{
     const send=async (e)=>{
          e.preventDefault();
          setMessage('')
-         setInvalid({})
+         setInvalid({});
          const form_data=new FormData();
         if(data.image){
                 for(let i=0;i<data.image.length;i++){
                     form_data.append('imageUrl',data.image[i]);
                 }
         }
-        form_data.append('data',JSON.stringify(data));
-    
+        
+         form_data.append('data',JSON.stringify(data));
          const res= await API.update(form_data,URLUPDATE);
          if(res){
               if(res.error){
@@ -52,54 +48,55 @@ const UpdateProfil=(props)=>{
                    if(inputRefFile.current){
                         inputRefFile.current.value=null;
                     }
-                     localStorage.setItem('user',JSON.stringify(res.data.user))
-                     initUser(res.data.user)
-                     setSuccess(true)
+                     setSuccess(!success);
+                     setImage('');
+                    
+
               }else{
-                  setInvalid(res.data)
-                  setSuccess(false)
+
+                  setInvalid(res.data);
               }
-         }else{
-              setMessage('Veuillez actualiser la page')
-              setSuccess(false)
+           
          }
     }
 
     const init=useCallback( async()=>{
             const res= await API.view(URL);
-            if(res){
-                   if(res.error){
-                         delete res.data.password;
-                        setData(state=>{ return {...state,...res.data} });
-                        setSuccess(true)
-                }else{
-                         setMessage(res.data)
-                         setSuccess(false)
-                    }
-              }else{
-                   setMessage('Veuillez actualiser la page')
-                   setSuccess(false)
-              }
-    },[URL])
+               if(res){
 
+                   if(res.error){
+
+                         delete res.data.password;
+                         setData(state=>{ return {...state,...res.data} });
+                        
+                         const token=localStorage.getItem('user')? JSON.parse(localStorage.getItem('user')).token:{};
+                         localStorage.setItem('user',JSON.stringify({...res.data,token:token}));
+                         initUser({...res.data,token:token});
+                    
+                    }else{
+                         setMessage(res.data);
+                    }
+              }
+    },[URL,initUser]);
 
     useEffect(()=>{
-         init()
+         setSuccess(true);
+         if(!success){
+            init()
+         }
+         return ()=>  setSuccess(false);
+         
     },[success,init])
-
-
+    
+   
       return <section className="formulaire" >
                 <div className="title">Modifier vos informations</div>
                <form className="login_sign" onSubmit={(e)=>send(e)}>
-
-                   <div className="item">
-                            <span className="btn_redirection" onClick={()=>history.push('/article')}> <i className="fas fa-times-circle"></i></span>
-                   </div>
                    {message &&
                      <div className="item">
                             <p className={!success?"valid_msg":"inValid_msg"}>{message && message} </p>
                      </div>
-                    }
+                   }
 
                    <div  className="item">
                         <label htmlFor="fullName">Nom utilisateur <span className={invalid.fullName ? "valid":"inValid"}> {invalid.fullName || ''}</span></label>

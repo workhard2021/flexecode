@@ -80,7 +80,7 @@ const ListeUser=(props)=>{
                        return <tr key={value._id}>
                             <td><Link to="#">{index+1}</Link></td>
                             <td><Link to={`/user/profil/${value._id}`}><img  src="/image/r1.jpg" alt="tag" /></Link></td>
-                            <td><Link  to={`/user/update-profil/${value._id}`} ><i className="fas fa-edit" >Modifier</i></Link></td>
+                            <td><Link  to={`/user/profil/${value._id}`} ><i className="fas fa-edit" >Modifier</i></Link></td>
                             <td><Link to="#" onClick={(e)=>destroy(value._id)}><i className="fas fa-edit" >Delete</i></Link></td>
                             <td><Link  to="#" onClick={(e)=>deni(value._id)}>{value.deni? 'Bloquer':'Debloquer'}</Link></td>
                         </tr>

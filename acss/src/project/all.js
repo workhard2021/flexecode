@@ -3,8 +3,7 @@ import {Link,useHistory} from 'react-router-dom';
 import '../containersite/css/cardProject.css';
 import * as API from '../api/config/api';
 
-const All=(props)=>{
-
+const All=(props)=> {
    const [array,setArray]=useState([]);
    const [success,setSucess]=useState(false);
    const history=useHistory();
@@ -16,15 +15,14 @@ const All=(props)=>{
            if(res){
 
                  if(res.error) {
-                     setArray(res.data);
-                     setSucess(true)
+                        setArray(res.data);
+                        setSucess(true); 
                  }
 
             }else {
-
                  history.push('/article');
             }
-   },[URL,history])
+   },[URL,history]);
 
    useEffect(()=>{
          init()
@@ -32,9 +30,9 @@ const All=(props)=>{
    },[success,init])
    
           
-      return <setion className="cardProject">
+      return <section className="cardProject">
                 <h2>{array && array[0].categorie}</h2>
-              {array && array.map((value,index)=>{
+              {array && array.map((value)=>{
                  return <div className="project" key={value._id}>
                      <div className="item">
                           <img id="logo_image" src={ `${value.imageUrl}`} alt="logo"/>
@@ -44,6 +42,6 @@ const All=(props)=>{
                  </div> 
 
               })}  
-        </setion>   
+        </section>   
 }
 export default All

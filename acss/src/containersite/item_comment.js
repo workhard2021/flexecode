@@ -1,39 +1,108 @@
-import React, { useState} from 'react';
+import React, { useState,useEffect,useCallback} from 'react';
 import './css/comment.css';
+import {Link} from 'react-router-dom';
+import * as API from '../api/config/api';
+import Update from '../commentaire/repondreCommentaire';
 const ItemComment=(props)=>{
-    
-      return <setion className="comment">
-            <div id="item">
+       const {idArticle,user,setSuccess,setOpenComment,success}=props;
+       const [item,setItem]=useState([]);
+       const [idCommentaire,setIdCommentaire]=useState('');
+       const init =useCallback(  async()=>{
+       const res= await  API.view(`/commentaire/view/${idArticle}`);
+       
 
-               <div id="author">
-                  <img id="logo_image" src="/image/r1.jpg"  alt="logo"/> 
-                  <span>souleymane camara</span>
-                  <span>il y'a 3 minute</span>
-               </div>
-               <p> sdsd couc un je sous le mane e t vous jjsdshd ejdhdh tres bien mon pote je suit tres couc sdosdo </p> 
-               <div className="btn">
-                    <span className={1==1? "like":"dislike"}><i class="far fa-thumbs-up"> 1</i></span>
-                    <span><i class="far fa-trash-alt"></i></span>
-                    <span><a href="form#"> <i class="far fa-comment-dots"></i> </a></span>
-               </div>
-               <div id="item-dot">
+         if(res){ 
+            
+           if(res.error && res.data !==null){
+                    setItem(res.data) 
+           }else{
+                    setItem([])
+           }
+         }
+    },[idArticle])
 
-                 <div id="author">
-                  <img id="logo_image" src="/image/r1.jpg"  alt="logo"/> 
-                  <span>souleymane camara</span>
-                  <span>il y'a 3 minute</span>
-                </div>
-               <p> sdsd couc un je sous le mane e t vous jjsdshd ejdhdh tres bien mon pote je suit tres couc sdosdo </p> 
-              
-               <div className="btn">
-                    <span className={1==1? "like":"dislike"}><i class="far fa-thumbs-up"> 1</i></span>
-                    <span><i class="far fa-trash-alt"></i></span>
-                    <span><a href="form#"> <i class="far fa-comment-dots"></i> </a></span>
-               </div>
-
-               </div>
-            </div>
+    const destroy=async(x)=>{
+        
+         const res=await API.destroy(`/commentaire/destroy/${x}`);
+         if(res){
+            setSuccess(!success)
+         }
          
-        </setion>   
+        
+    }
+
+    const like=async(x)=>{
+      const data=JSON.stringify({id:x,idUser:user._id|| "1"});
+      const res=await API.view(`/commentaire/like/${data}`);
+      if(res){
+        setSuccess(!success)
+      }
+  
+     }
+
+    const comment=async(x)=>{
+           
+          if(x===idCommentaire){
+                setIdCommentaire('');
+                setOpenComment(false);
+                 
+          }else {
+                setIdCommentaire(x);
+                setOpenComment(true);     
+          }
+    }
+    
+    useEffect(()=>{
+          init()
+    },[init,success,idCommentaire]);
+
+      return <section className="comment">
+            {item && item.map((value,index)=>{
+
+               return  <div id="item" key={index}>
+                     
+                      <div id="author">
+                         <img id="logo" src={value.imageUser? value.imageUser:'/image/r1.jpg'}  alt="logo"/> 
+                         <span>{value.fullName? value.fullName :'Anonyme'}</span>
+                          <span>{value.dateInsert}</span>
+                      </div>
+
+                      <p> {value.comment}</p> 
+                      <div className="btn">
+                           <span onClick={()=>{like(value._id)}} className={
+                              value.like &&  value.like.map((val)=>{
+                                        
+                                      return  val.idUser===value._id ? "like":"dislike"
+                                })
+                            }><i className="far fa-thumbs-up">{value.like.length || 0}</i></span>
+                            { user.role==="admin" && <span onClick={()=>destroy(value._id)}><i className="far fa-trash-alt"></i></span> }
+                           <span onClick={()=>comment(value._id)}><Link to="#form"> <i className="far fa-comment-dots"></i> </Link></span>
+                      </div>
+
+                      {   
+                          value._id===idCommentaire &&
+                          <Update user={user} idCommentaire={idCommentaire} setOpenComment={setOpenComment}  comment={comment} idArticle={idArticle}/>
+                  
+                      }
+
+                      {
+                        value.commentItem && value.commentItem.map((value,index)=>{    
+                       
+                        return   <div id="item-dot" key={index}>
+       
+                         <div id="author">
+                          <img id="logo_image" src={value.imageUser?value.imageUser:'/image/r1.jpg'}  alt="logo"/> 
+                          <span>{value.fullName || 'Anonyme'}</span>
+                          <span>{value.dateInsert}</span>
+                        </div>
+                        <p> {value.comment} </p> 
+                       </div>
+                       })
+                      }
+                      
+                   </div>
+            })}
+            
+        </section>   
 }
 export default ItemComment

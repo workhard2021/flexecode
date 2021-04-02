@@ -77,19 +77,24 @@ const cloudinaryKey= process.env.CLOUD_NAME? {
     cloud_name:'flexecode',
     api_key:714827735799256,
     api_secret:'7QjbDG0VMIsV5XGaiJhlBwV3eoc'
- }
+ };
 
- cloudinary.config(cloudinaryKey)
-upload = (file, folder) => {
-     return   cloudinary.uploader.upload(file, (result) => {
+ cloudinary.config(cloudinaryKey);
+
+upload = async (file, folder) => {
+       const  a=await cloudinary.uploader.upload(file, (result) => {
 			 return result
-	    })
-}
-destroy_cloud = (file, folder) => {
+	    });
 
-	return   cloudinary.uploader.destroy(file, (result) => {
+		return a;
+}
+destroy_cloud = async (file, folder) => {
+
+	const a =  cloudinary.uploader.destroy(file, (result) => {
 			return result
 	   })
+
+	   return a;
 }
 
 module.exports={

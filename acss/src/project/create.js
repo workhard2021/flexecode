@@ -2,8 +2,8 @@ import React,{useState,useRef} from 'react';
 import { useHistory } from 'react-router-dom';
 import '../containersite/css/formulaire.css';
 import * as API from '../api/config/api';
-const Create=()=>{
-     
+const Create=(props)=>{
+    const {user}=props;
     const option=['php','css','java','javascript','python','nodejs','reactjs','react native'];
     const [data,setData]=useState({});
      const [invalid,setInvalid]=useState({})
@@ -12,6 +12,7 @@ const Create=()=>{
     const inputRefFile=useRef(null);
     const URL='/project/create';
     const history=useHistory();
+   
 
     const saisir=(e)=>{
           e.preventDefault();
@@ -33,14 +34,13 @@ const Create=()=>{
          e.preventDefault();
          setMessage('')
          setInvalid({})
-         setData(state=>{return {...state ,idUser:"1"} })
          const form_data=new FormData();
         if(data.image){
                 for(let i=0;i<data.image.length;i++){
                     form_data.append('imageUrl',data.image[i]);
                 }
         }
-         form_data.append('data',JSON.stringify({...data,idUser:"1"}));
+         form_data.append('data',JSON.stringify({...data,idUser:user._id}));
          const res= await API.create(form_data,URL);
          
          if(res){

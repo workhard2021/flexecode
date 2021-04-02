@@ -3,23 +3,24 @@
      justify-content:space-evenly;
      align-items:center;
      flex-wrap:wrap; 
-     
-     
+     width:100%; 
+     flex-direction:row;
 }
 
 .cardProject .project{
-           flex-shrink:2;
-           flex-basis:30em;
+
+           width:30em;
            height:auto;
+           flex-shrink:0.5;
            padding:5px;
            border-radius:4px;
            box-shadow:0px 0px 5px grey;
            box-sizing:border-box;
            border:1px solid white;
            transition: all 0.5s;
-           margin:10px;
-          
+           margin:10px;       
 }
+
 .cardProject .item {
      position:relative;
      width:100%;

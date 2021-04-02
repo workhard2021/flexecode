@@ -38,10 +38,12 @@ const userSchema= new mongoose.Schema({
 	 });
 
 const  modelUser = new mongoose.model('user',userSchema);
+
 const commentaireSchema=mongoose.Schema({
 	     comment:{type:String,required:true},
-	     email:{type:String,required:true},
-	     fullName:{type:String,Default:'Annonyme'},
+		 idUser:{type:String},
+		 email:{type:String},
+		 like:{type:Array},
 	     idArticle:{type:String,required:true},
 	     commentItem:{type:Array},
 	     dateInsert:{type:Date,Default:Date.now()}   

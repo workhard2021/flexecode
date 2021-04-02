@@ -5,6 +5,7 @@ const http=require('http');
 const routeArticle=require('./route/routeArticle');
 const routeUser=require('./route/routeUser');
 const routeProject=require('./route/routeProject');
+const routeCommentaire=require('./route/routeCommentaire');
 
 if(process.env.NODE_ENV==='production'){ 
     app.use(express.static("acss/build"))
@@ -21,6 +22,7 @@ if(process.env.NODE_ENV==='production'){
 app.use('/user/',routeUser);
 app.use('/article/',routeArticle);
 app.use('/project/',routeProject);
+app.use('/commentaire/',routeCommentaire);
 app.listen(process.env.PORT || 8181,()=>{
 	  console.log('server portefeuille en ecoute '+process.env.PORT);
 });

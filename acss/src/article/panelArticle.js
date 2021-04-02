@@ -6,11 +6,10 @@ const PanelArticle=(props)=>{
    
 
   return <section className="panel">
-               <h1>Article</h1>
+               <h1>Gestion</h1>
             <ul>
-              <li><Link to='/article/categorie'>Categorie  for user</Link></li>
               <li><Link to='/article/create'>Create article</Link></li>
-              <li><Link to='/article/menager-categorie'>Menager</Link></li>
+              <li><Link to='/article/menager-categorie'> Article</Link></li>
             </ul>  
        </section>
 

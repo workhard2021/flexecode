@@ -2,7 +2,8 @@ import React,{useState,useRef,useEffect, useCallback} from 'react';
 import {useParams,useHistory} from 'react-router-dom';
 import * as API from '../api/config/api';
 import '../containersite/css/formulaire.css';
-const Update=()=>{
+const Update=(props)=>{
+    const {user}=props;
     const option=['php','css','java','javascript','python','nodejs','reactjs','react native'];
     const [data,setData]=useState({});
     const [invalid,setInvalid]=useState({})
@@ -42,7 +43,7 @@ const Update=()=>{
                     form_data.append('imageUrl',data.image[i]);
                 }
         }
-        form_data.append('data',JSON.stringify(data));
+        form_data.append('data',JSON.stringify({...data,idUser:user._id}));
          const res= await API.update(form_data,URLUPDATE);
          if(res){
               if(res.error){
@@ -51,19 +52,17 @@ const Update=()=>{
                         inputRefFile.current.value=null;
                    }
                    setInvalid({})
+                   setImage('')
                
               }else{
                    
                    setInvalid(res.data)
               }
 
-         }else{
-              setMessage('Veuillez actualiser la page')
-             
          }
     }
 
-    const init= useCallback(  async()=>{
+    const init= useCallback(async()=>{
             const res= await API.view(URL);
             if(res){
                    if(res.error){
@@ -95,7 +94,7 @@ const Update=()=>{
          </div>
         }
        <div  className="item">
-            <label htmlFor="select">Categorie <span className={ invalid.categorie!==undefined ? "valid":"inValid"}> {invalid.categorie || ''}</span></label>
+            <label htmlFor="select">Categorie <span className={ invalid.categorie? "valid":"inValid"}> {invalid.categorie? invalid.categorie:''}</span></label>
               <div id="select_item">
                 <select name="categorie" id="select" value={data.categorie || ''} onChange={(e)=>saisir(e)}>
                        <option  value='' desabled='true'>Choisir</option>
@@ -105,12 +104,12 @@ const Update=()=>{
         </div>
 
        <div  className="item">
-            <label htmlFor="title">Titre <span className={ invalid.title!==undefined ? "valid":"inValid"}> {invalid.title || ''}</span></label>
+            <label htmlFor="title">Titre <span className={ invalid.title? "valid":"inValid"}> {invalid.title || ''}</span></label>
             <input type="text" value={data.title || ""}  id="title" name="title" placeholder="Titre"  onChange={(e)=>saisir(e)}/>
        </div>
 
        <div  className="item">
-            <label htmlFor="linkGithub">LinkGithub <span className={ invalid.linkGithub!==undefined ? "valid":"inValid"}> {invalid.linkGithub || ''}</span></label>
+            <label htmlFor="linkGithub">LinkGithub <span className={ invalid.linkGithub? "valid":"inValid"}> {invalid.linkGithub || ''}</span></label>
             <input type="text" value={data.linkGithub || ""} id="linkGithub" name="linkGithub" placeholder="Lien github"  onChange={(e)=>saisir(e)}/>
        </div>
 
@@ -121,7 +120,7 @@ const Update=()=>{
 
 
        <div  className="item">
-            <label htmlFor="comment">Commantaire <span className={ invalid.comment!==undefined ? "valid":"inValid"}> {invalid.comment || ''}</span></label>
+            <label htmlFor="comment">Commantaire <span className={ invalid.comment? "valid":"inValid"}> {invalid.comment || ''}</span></label>
             <textarea id="comment" value={data.comment || ""} name="comment" placeholder="Ajouter commentaire" onChange={(e)=>saisir(e)}> </textarea>
        </div> 
        

@@ -24,7 +24,7 @@ const all=(req,res,next)=> {
 
  const create=(req,res,next)=>{   
        let data=JSON.parse(req.body.data);
-
+        console.log(data);
        const files=req.files;
        let error={};
 	   let test=false;
@@ -58,7 +58,7 @@ const all=(req,res,next)=> {
    
         if(files.length>0) {
         			for(let file of files){
-                                        const {path}=file;
+                    const {path}=file;
         				   upload(path,'project').then(result=>{
         						 modelProject.insertMany([{...data,cloud_id:result.public_id,imageUrl:result.url,dateInsert:Date.now()}])
         						 .then(item=>{
@@ -68,17 +68,16 @@ const all=(req,res,next)=> {
         				   fs.unlinkSync(path)
         			   } 
         }else{
-               modelProject.insertMany([{...data,imageUrl:'a.jpg',dateInsert:Date.now()}])
+               modelProject.insertMany([{...data,imageUrl:'r1.jpg',dateInsert:Date.now()}])
                        .then(item=>{
                         return res.status(200).json('Votre project a été crée')
                }).catch(e=> res.status(404).json(e.message))
         }
-
-	 
- 	    
+   
  };
  
-const update=(req,res,next)=>{   
+const update=(req,res,next)=>{  
+
     const data=JSON.parse(req.body.data);
     const files=req.files;
     const id=req.params.id;
@@ -112,10 +111,9 @@ const update=(req,res,next)=>{
          return res.status(201).json(error);
      }
     
-     
-
+    
       if(files.length>0) {
-
+               delete data.image;
               for(let file of files){
                    const {path}=file;
                    upload(path,'project').then(result=>{
@@ -124,12 +122,14 @@ const update=(req,res,next)=>{
                           return res.status(200).json('Mise à jour a été effectuée')
                        }).catch(e=> res.status(404).json(e.message))
                    })
-				   destroy_cloud(data.cloud_id)
+                   if(data.cloud_id){ 
+				              destroy_cloud(data.cloud_id)
+                   }
                    fs.unlinkSync(path)
               } 
               
       }else{
-               modelProject.updateOne({_id:id},{...data,imageUrl:'a.jpg',dateInsert:Date.now()})
+               modelProject.updateOne({_id:id},{...data,dateInsert:Date.now()})
                        .then(item=>{
                         return  res.status(200).json('Mise à jour a été effectuée')
                }).catch(e=> res.status(404).json(e.message))

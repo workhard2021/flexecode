@@ -1,22 +1,27 @@
 section{
     display:flex;
     justify-content:center;
-    align-items:center; 
+    align-items:center;
+    flex-direction:column;
+    width:100%;
+    padding:0px;
+    margin:0px;
 }
+
 .logo #title_btn{
      position:absolute;
-     top:30%;
+     top:10em;
      text-align:left;
      color:white;
      z-index:1;
      width:100%; 
      display:flex;
-     justify-content:start;
+     justify-content:center;
      align-items:center;
      flex-direction:column;
 }
 .logo #title_btn h2{
-    color:white;
+    color:rgb(241, 238, 238);
     font-size:1.2em;
 }
 .logo #title_btn #btn{
@@ -29,11 +34,13 @@ section{
        cursor: pointer;
        transition:all 0.3s;
 }
+
 .logo #title_btn #btn:hover{
      opacity:0.9;
 }
 #logo_image {
-     position: relative;
+     position:relative;
      width:100%; 
      height:300px;
 }
+

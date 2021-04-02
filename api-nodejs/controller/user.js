@@ -1,9 +1,9 @@
 
 const {modelUser}=require('../model/model');
 const {ValidationMail,upload,destroy_cloud}=require('../middleware/middleware');
-
 const bcrypt =require('bcrypt');
 const jwt = require('jsonwebtoken');
+const fs=require('fs');
 const salt=10;
 
 const sign=(req,res,next)=>{
@@ -14,7 +14,6 @@ const sign=(req,res,next)=>{
 	   data.role='admin';
 	   let error={};
        let test=false;
-
     if(!ValidationMail(data.email) ) {
             error.email='Veuillez remplir le champ';
             test=true;   
@@ -54,7 +53,7 @@ const sign=(req,res,next)=>{
 		     	   modelUser.insertMany({...data,password,imageUrl:'a.jpg',dataInsert:Date.now})
 		     	   .then(item=> {
                       
-				      return  res.status(200).json('Profil a été crée')
+				      return  res.status(200).json('Inscription effectuée')
 
 				   }).catch(e=> res.status(404).json(e.message))
 		     })
@@ -144,15 +143,17 @@ const all= (req,res,next)=>{
 
 const update= async (req,res,next)=> {
 
-    let data=JSON.parse(req.body.data);	
+   try{
+	let data=JSON.parse(req.body.data);	
 	const {id}=req.params;
     const files=req.files;
 	let error={};
 	let test=false;
-	
-    if(!ValidationMail(data.email)) { 
+	let password2='';
 
-		error.email='Email est incorrect';
+	if(!ValidationMail(data.email)) { 
+
+		error.email='Email est invalide';
 		test=true;
     }
 	if(data.fullName ==='' || data.fullName===undefined){
@@ -160,136 +161,119 @@ const update= async (req,res,next)=> {
 		test=true;
 	}
    
-	
-	 const count = await modelUser.findOne({email:data.email});
+	const count = await modelUser.findOne({email:data.email});
 		   
-	  if(count !==null){
+	if(count!==null){
 		
 			    if(count._id!=id){ 
 				     error.email= data.email+' existe déja';
 					 test=true;
 				}
-	   }
+	}
 	  
-	   if(data.password !==null && data.password!==undefined) { 
+	if(data.password !==null && data.password!==undefined) { 
 
-		if(data.password.length<6){
-
-		  error.password='Le mot de passe doit être superieur 5 caractères';
-		  test=true;
+		if(data.password.length>0 && data.password.length<6 ){
+			test=true;
+		   error.password='Le mot de passe doit être superieur 5 caractères';
+		   if(data.password2==undefined | data.password2==null){
+           
+			error.password2='Veuillez entrer l\'ancian mot de passe';
+			
+		   }
 		}
+		
+    }
+	
+	if(data.password2 !==null && data.password2!==undefined) { 
 
-		if(data.password2 !==null && data.password2!==undefined) { 
-			const password2= await bcrypt.compare(data.password2,count.password);
+		if(data.password2.length>0){ 
+
+		  password2= await bcrypt.compare(data.password2,count.password);
+
 			if(!password2){
-				  error.password2='Ancien mot de passe est incorrect';
-				  test=true;
-		    }
+			  error.password2='Ancien mot de passe est invalide';
+			  test=true;
+			}
+			if(data.password.length==0){
 
-		 }
-
-      }
-	   
- 
-
+				error.password='Veuillez entrer nouveau mot de passe';
+				test=true;
+			 }
+	
+		}
+	}
+	
 	 if(test) {
 
 		   return res.status(201).json(error)
-      }
+     }
 
-
-	  
     if(files.length>0) {
-		
+		  delete data.image;
     	  for (let file of files) {
 			
     	  	     const {path}=file;
 				 
-    	  	     upload(path,(result)=> {
-				 
-                       if(data.password){
-							
-	    	  	     	 bcrypt.hash(data.password,salt).then(hash=> {
+				 let result=await upload(path,(resultat)=>{{
+					    return resultat;
+				 }});
 
-							modelUser.updateOne({_id:id},{$set:{...data,cloud_id:result.public_id,imageUrl:result.url,password:hash}})
-							  .then(item => {
+                const pw=data.password? true:false;
+				fs.unlinkSync(path);
+				if(pw){
+				      
+					  const password= await bcrypt.hash(data.password,salt);
+					  delete data.password;
+					  delete data.password2;
+					  const update= await modelUser.updateOne({_id:id},{$set:{...data,cloud_id:result.public_id,imageUser:result.url,password:password}});
+					
+			          const a = data.cloud_id ?  await destroy_cloud(data.cloud_id,(error)=>{
+					                   return error;
+			        	            }):false;
+					  
+				}else {
 
-										  const token=jwt.sign({idUser:id},data.fullName,{expiresIn:'1h'});
-	                                      const user={...data,token:token}
-										  delete user.password;
-										  delete user.password2;
-										 
-
-								  return  res.status(200).json({message:'Mise à jour a été effectuéé',user:user}) 
-   
-							  }).catch(e=> res.status(404).json(e.message))
-  
-						  }).catch(e=> res.status(404).json(e.message))
-					   
-						}else{
-							
-							modelUser.updateOne({_id:id},{$set:{...data,cloud_id:result.public_id,imageUrl:result.url,password:hash}})
-							  .then(item => {
-								
-								const token=jwt.sign({idUser:id},data.fullName,{expiresIn:'1h'});
-								const user={...data,token:token}
-								delete user.password;
-								delete user.password2;
-								
-
-								  return  res.status(200).json({message:"Mise à jour a été éffectuée",user:user}) 
-   
-							  }).catch(e=> res.status(404).json(e.message))							  
-						}
-	                  
-    	  	     })
-
-				if(data.cloud_id){
-					destroy_cloud(data.cloud_id)
+					delete data.password;
+					delete data.password2;
+					const update= await modelUser.updateOne({_id:id},{$set:{...data,cloud_id:result.public_id,imageUser:result.url}});
+			        const a =data.cloud_id ?  await destroy_cloud(data.cloud_id,(error)=>{
+					                   return error;
+			        	            }):false;
 				}
-			     
-
+				 
+                 //   const token=jwt.sign({idUser:id},data.fullName,{expiresIn:'1h'});
+                  const user={...data};
+                  return  res.status(200).json({message:'Mise à jour a été effectuée',user:user});
     	   }
 
-
     }else {
-		     
-		 
-		   if(data.password){
-		     	bcrypt.hash(data.password,salt).then(hash=> {
 
-				modelUser.updateOne({_id:id},{$set:{...data,password:hash}})
-				  .then(item =>{
-					
-					const token=jwt.sign({idUser:id},data.fullName,{expiresIn:'1h'});
-					const user={...data,token:token}
-					delete user.password;
-					delete user.password2;
+		const pw=data.password2? true:false;
+		if(pw){
 
-					  return  res.status(200).json({message:"Mise à jour a été éffectuée",user:user}) 
-					 
-				  }).catch(e=> res.status(404).json(e.message))
-  
-			  }).catch(e=> res.status(404).json(e.message))
+			  const password= await bcrypt.hash(data.password,salt);
+			  delete data.password;
+			  delete data.password2;
 
-		   }else{
+			  const update= await modelUser.updateOne({_id:id},{$set:{...data,password:password}});
 
-				  modelUser.updateOne({_id:id},{$set:{...data}})
-				  .then(item =>{
-				
-					const token=jwt.sign({idUser:id},data.fullName,{expiresIn:'1h'});
-					const user={...data,token:token}
-					delete user.password;
-					delete user.password2;
-
-					  return  res.status(200).json({message:"Mise à jour a été éffectuée",user:user}) 
-					 
-				  }).catch(e=> res.status(404).json(e.message))
-
-		   }
-
-	       
+		}else {
+			
+			delete data.password;
+			delete data.password2;
+			const update= await modelUser.updateOne({_id:id},{$set:{...data}});
+		}
+		  
+		  const user={...data};
+		  return  res.status(200).json({message:'Mise à jour a été effectuée',user:user});
+		    
     } 
+
+   }catch(e){
+	       console.log(e.message)
+		   return res.status(404).json(e.message);
+   }
 
 }
 
@@ -310,7 +294,7 @@ const destroy=(req,res,next)=>{
 	
 	modelUser.findOne({_id:id})
    .then(item=>{
-			 destroy_cloud(item.cloud_id)
+		   const a=item.cloud_id && destroy_cloud(item.cloud_id);
 		   modelUser.deleteOne({_id:id})
 		 .then(x=>{
 			   return  res.status(200).json('Compte a été supprimé')

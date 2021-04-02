@@ -12,13 +12,25 @@ const MenagerCategorieView=(props)=>{
    const {categorie}=useParams()
    const placeholder="Rechercher..."
    const URL=`/project/categorie/${categorie}`;
+   const {user}=props;
 
    const init= useCallback( async ()=>{
            const res = await API.view(URL);
             if(res.error){
-                setArray(res.data);
+
+               if(user.role !=='admin') { 
+                  const array_cm=res.data.filter(value=>value.idUser===user._id);
+                  setArray(array_cm);
+                  setSuccess(true);
+
+               }else {
+
+                  setArray(res.data);
+                  setSuccess(true);
+                 
+               }
             }
-   },[URL]);
+   },[URL,user.role,user._id]);
 
    const destroy= async (id)=> {
            
