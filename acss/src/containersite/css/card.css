@@ -3,8 +3,30 @@
      justify-content:space-evenly;
      flex-direction:row;
      width:100%;
-    flex-wrap:wrap;
+     flex-wrap:wrap;
+     min-height:300px;
 }
+.title{
+      font-size:1.5em;
+      padding:0.5em;
+      box-sizing:border-box;
+      text-align:center;
+}
+.title span{
+      color:rgb(155, 223, 211);
+      text-transform:capitalize;
+}
+.title_cat_view{
+      width:50%;
+      background-color:initial;
+}
+.parag{
+      text-align:center;
+      padding:0.5em;
+      box-sizing:border-box;
+      font-size:1.5em;
+}
+
 .card a{
      text-decoration:none;  
 

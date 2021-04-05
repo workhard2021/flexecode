@@ -24,7 +24,6 @@ const all=(req,res,next)=> {
 
  const create=(req,res,next)=>{   
        let data=JSON.parse(req.body.data);
-        console.log(data);
        const files=req.files;
        let error={};
 	   let test=false;
@@ -49,30 +48,28 @@ const all=(req,res,next)=> {
             error.comment='Veuillez remplir le champ';
           test=true;  
         }
-
+        if(!files.length>0){
+            error.image='Veuillez ajouter une photo';
+            test=true;  
+        }
         if(test){
- 
             return res.status(201).json(error);
         }
-	   
-   
-        if(files.length>0) {
-        			for(let file of files){
-                    const {path}=file;
-        				   upload(path,'project').then(result=>{
-        						 modelProject.insertMany([{...data,cloud_id:result.public_id,imageUrl:result.url,dateInsert:Date.now()}])
-        						 .then(item=>{
-        						        return  res.status(200).json('Votre poste a été crée ')
-        						  }).catch(e=> res.status(404).json(e.message))
-        				   })
-        				   fs.unlinkSync(path)
-        			   } 
-        }else{
-               modelProject.insertMany([{...data,imageUrl:'r1.jpg',dateInsert:Date.now()}])
-                       .then(item=>{
-                        return res.status(200).json('Votre project a été crée')
-               }).catch(e=> res.status(404).json(e.message))
-        }
+    
+  	for(let file of files){
+            const {path}=file;
+        
+            upload(path,'project').then(result=>{
+        	
+                     modelProject.insertMany([{...data,cloud_id:result.public_id,imageUrl:result.url,dateInsert:Date.now()}])
+        			.then(item=>{
+        				 return  res.status(200).json('Votre poste a été crée')
+        			 }).catch(e=> res.status(404).json(e.message))
+        	 }).catch(e=> res.status(404).json(e.message));   
+            
+             fs.unlinkSync(path);
+   } 
+        
    
  };
  
@@ -111,21 +108,28 @@ const update=(req,res,next)=>{
          return res.status(201).json(error);
      }
     
-    
+
       if(files.length>0) {
                delete data.image;
               for(let file of files){
                    const {path}=file;
+                
                    upload(path,'project').then(result=>{
                        modelProject.updateOne({_id:id},{...data,cloud_id:result.public_id,imageUrl:result.url,dateInsert:Date.now()})
                        .then(item=>{
                           return res.status(200).json('Mise à jour a été effectuée')
                        }).catch(e=> res.status(404).json(e.message))
-                   })
+                   }).catch(e=> res.status(404).json(e.message))
+
                    if(data.cloud_id){ 
-				              destroy_cloud(data.cloud_id)
+
+				              destroy_cloud(data.cloud_id).then(e=>{
+                                   return e;  
+                              }).catch(e=> e);
                    }
-                   fs.unlinkSync(path)
+
+                   fs.unlinkSync(path);
+                   
               } 
               
       }else{
@@ -165,10 +169,10 @@ const destroy=(req,res,next)=>{
  const search=(req,res,next)=> {
   
  	    const data=req.params.title;
-      const regex=new RegExp('^'+data+'*','i');
- 	    modelProject.find({$or:[{title:regex},{comment:regex}]}).sort({title:1}).limit(15)
+  
+        const regex=new RegExp('^'+data+'*','i');
+ 	    modelProject.find({title:regex}).sort({title:1}).limit(15)
  	    .then(item=> {
-
  	    	      return  res.status(200).json(item)
 
  	    }).catch(e=> res.status(404).json(e.message))

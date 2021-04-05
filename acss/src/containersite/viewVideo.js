@@ -15,7 +15,7 @@ const  ViewVideo=(props)=>{
                       <span>Publié il y'a 3 minutes</span>
                   </div>
                   <p>Comment jes uod le commanet taire</p>
-                  <a className="code source" href="/gith"> Code source</a>
+                  <a className="code source" href="/"> Code source</a>
               </article>
 
              </div>

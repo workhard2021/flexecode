@@ -1,5 +1,5 @@
 import React,{useState,useEffect, useCallback} from 'react';
-import {Link,useHistory,useParams} from 'react-router-dom';
+import {useHistory,useParams} from 'react-router-dom';
 import '../containersite/css/cardProject.css';
 import * as API from '../api/config/api';
 
@@ -17,7 +17,7 @@ const CategorieView=(props)=>{
 
                  if(res.error) {
                      setArray(res.data);
-                     setSucess(true)
+                     
                  }
 
             }else {
@@ -26,31 +26,35 @@ const CategorieView=(props)=>{
             }
    },[URL,history])
 
-   const redirection=(e,x)=>{
-           // e.preventDefault();
-           window.location.href=x;
-   }
-
    useEffect(()=>{
+      setSucess(true)
          init()
-   },[success,init])
+      return  ()=> setSucess(false)
+   },[init])
+
+    if(!success){
+         
+           return  null; 
+    }
+ ;
    
          
       return <>
-            <h2>{array.length>0 && array[0].categorie}</h2>
-           <setion className="cardProject">
+            <h2 className="title">Tous les projets en <span>{array.length>0 && array[0].categorie}</span></h2>
+           <section className="cardProject">
     
               {array && array.map((value,index)=>{
-                 return <div className="project" key={value._id}>
+                 return <div className="project" key={index}>
                      <div className="item">
-                          <img id="logo_image" src={value.imageUrl} alt="logo"/>
-                          <Link className="dot-1" target='_blank' to={value.linkGithub} onClick={(e)=>redirection(e,value.linkGithub)}> <strong>{value.title} </strong></Link>
+                          <img id="logo_image" src={value.imageUrl} alt="..."/>
+                          <a className="dot-1"  rel="noreferrer" target='_blank' href={value.linkGithub}> <strong>{value.title} </strong></a>
                      </div>
+         
                      <p>{value.comment}</p>
                  </div> 
 
               })}  
-        </setion>  
+        </section>  
         </> 
 }
 export default CategorieView

@@ -1,11 +1,12 @@
 import React,{useState,useEffect, useCallback} from 'react';
 import {Link} from 'react-router-dom';
 import '../containersite/css/liste-article.css';
+import Search from '../containersite/search';
 import * as API from '../api/config/api';
 
 const ListeUser=(props)=>{
    
-   const placeholder="Rechercher...";
+
    const [array,setArray]=useState([]);
    const [success,setSuccess]=useState(false);
    const [message,setMessage]=useState('');
@@ -53,15 +54,12 @@ const ListeUser=(props)=>{
    useEffect(()=>{
           init()
          
-   },[success,init])
+   },[success,init]);
   
       
     return <section className="list">
-                <form>
-                        <input type="text" name="search" placeholder={placeholder}/>
-                        <button><i className="fas fa-search"></i></button>
-                </form>
-                <div className={message? 'valide':'invalid'}> {message}</div>
+                <Search setSearch={setArray} success={success} setSuccess={setSuccess} setMessage={setMessage} visibilite={false} url='/user/search'/>
+                {message && <div className="invalid"> {message}</div> }
                 <table>  
                     <caption>Liste des utilisateurs</caption>
                     <thead>
@@ -69,7 +67,6 @@ const ListeUser=(props)=>{
                            <th>N°</th>
                          
                            <th>Voir</th>
-                           <th>Modifier</th>
                            <th>Supprimer</th>
                            <th>Action</th>
                         </tr>
@@ -80,7 +77,6 @@ const ListeUser=(props)=>{
                        return <tr key={value._id}>
                             <td><Link to="#">{index+1}</Link></td>
                             <td><Link to={`/user/profil/${value._id}`}><img  src="/image/r1.jpg" alt="tag" /></Link></td>
-                            <td><Link  to={`/user/profil/${value._id}`} ><i className="fas fa-edit" >Modifier</i></Link></td>
                             <td><Link to="#" onClick={(e)=>destroy(value._id)}><i className="fas fa-edit" >Delete</i></Link></td>
                             <td><Link  to="#" onClick={(e)=>deni(value._id)}>{value.deni? 'Bloquer':'Debloquer'}</Link></td>
                         </tr>

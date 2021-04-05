@@ -1,19 +1,19 @@
 import React,{useState,useRef,useEffect, useCallback} from 'react';
-import {useParams,useHistory} from 'react-router-dom';
 import * as API from '../api/config/api';
 import '../containersite/css/formulaire.css';
+import Loader from '../containersite/loader';
+
 const Update=(props)=>{
-    const {user}=props;
+    const {user,id}=props;
     const option=['php','css','java','javascript','python','nodejs','reactjs','react native'];
     const [data,setData]=useState({});
     const [invalid,setInvalid]=useState({})
     const [message,setMessage]=useState('');
     const inputRefFile=useRef(null);
     const [images,setImage]=useState('')
-    const {id}=useParams();
-    const history=useHistory();
     const URL=`/project/view/${id}`;
     const URLUPDATE=`/project/update/${id}`;
+    const [loader,setLoaer]=useState(false);
 
     const saisir=(e)=>{
           e.preventDefault();
@@ -36,7 +36,9 @@ const Update=(props)=>{
     const send=async (e)=>{
 
          e.preventDefault();
-         setMessage('')
+         setMessage('');
+         setLoaer(true);
+
          const form_data=new FormData();
         if(data.image){
                 for(let i=0;i<data.image.length;i++){
@@ -46,6 +48,7 @@ const Update=(props)=>{
         form_data.append('data',JSON.stringify({...data,idUser:user._id}));
          const res= await API.update(form_data,URLUPDATE);
          if(res){
+              setLoaer(false);
               if(res.error){
                    setMessage(res.data)
                    if(inputRefFile.current){
@@ -80,17 +83,13 @@ const Update=(props)=>{
          init()
     },[init])
 
-    return <section className="formulaire">
-    <div className="title">Mettre à jour </div>
+    return <section className="formulaire" id="project_form">
+    <div className="title">Modifier project</div>
    <form className="login_sign" onSubmit={(e)=>send(e)}>
-       
-       <div className="item">
-                <span className="btn_redirection" onClick={()=>history.goBack()}> <i className="fas fa-times-circle"></i></span>
-       </div>
-       
+       { loader && <Loader/> }
        {message &&  
-         <div className="item">
-           <p className="valid_msg">{message}</p>
+         <div className="valid_msg">
+              {message}
          </div>
         }
        <div  className="item">

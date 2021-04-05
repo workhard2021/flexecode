@@ -6,11 +6,10 @@ const Logo=(props)=>{
       return <section className="logo">
             <div id="title_btn">
                  
-                  <h2>Flexecode</h2>
-                  <span id="btn">S'abonner 515.2k</span>
+                  <h2>Cours gratuis et accessibles à tous</h2>
+                  <span id="btn">Abonnés 515.2k</span>
             </div>
-             <img id="logo_image" src="/image/r1.jpg"  alt="logo"/>
-         
+             <img id="logo_image" src="/image/logo2.png"  alt="logo"/>
         </section>   
 }
 export default Logo

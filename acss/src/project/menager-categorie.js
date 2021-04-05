@@ -35,7 +35,7 @@ const MenagerCategorie=(props)=>{
    },[success,init])
 
       return <>
-              <h2>Gestion des  Categories</h2>
+              <h2 className="title">Gestion des Categories</h2>
              <section className="cardProject">
                 
               {array && array.map((value,index)=>{
@@ -47,7 +47,7 @@ const MenagerCategorie=(props)=>{
                        <p>Tous les projects  {value.categorie}</p>
                    </div> 
               })}
-        </section>  
+              </section>  
         </> 
 }
 export default MenagerCategorie

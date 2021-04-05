@@ -1,6 +1,6 @@
 import React,{useState,useRef} from 'react';
-import { useHistory } from 'react-router-dom';
 import '../containersite/css/formulaire.css';
+import Loader from '../containersite/loader';
 import * as API from '../api/config/api';
 const Create=(props)=>{
     const {user}=props;
@@ -10,9 +10,8 @@ const Create=(props)=>{
     const [message,setMessage]=useState('');
     const [images,setImage]=useState('')
     const inputRefFile=useRef(null);
+    const [loader,setLoaer]=useState(false);
     const URL='/project/create';
-    const history=useHistory();
-   
 
     const saisir=(e)=>{
           e.preventDefault();
@@ -34,8 +33,11 @@ const Create=(props)=>{
          e.preventDefault();
          setMessage('')
          setInvalid({})
+         setImage('');
+         setLoaer(true);
          const form_data=new FormData();
         if(data.image){
+                
                 for(let i=0;i<data.image.length;i++){
                     form_data.append('imageUrl',data.image[i]);
                 }
@@ -44,16 +46,18 @@ const Create=(props)=>{
          const res= await API.create(form_data,URL);
          
          if(res){
+               setLoaer(false);
               if(res.error){
                    
                    setMessage(res.data)
                    setData({})
                    inputRefFile.current.value=null;
-                   setImage('')
-                   
-
-               }else{
+                   setImage('');
+               }else {
                   setInvalid(res.data)
+                  if(res.data.image){
+                        setImage(res.data.image);
+                  }
                }
 
          }else{
@@ -63,17 +67,13 @@ const Create=(props)=>{
     
 
 
-      return <section className="formulaire">
-                <div className="title">Poste votre project</div>
-               <form className="login_sign" onSubmit={(e)=>send(e)}>
-                   
-                   <div className="item">
-                            <span className="btn_redirection" onClick={()=>history.goBack()}> <i className="fas fa-times-circle"></i></span>
-                   </div>
-                   
+      return <section className="formulaire" id='project_form'>
+                <div className="title">Poste un project</div>
+               <form className="login_sign" onSubmit={(e)=>send(e)}> 
+                  { loader && <Loader/> } 
                    {message &&  
-                     <div className="item">
-                       <p className="valid_msg">{message}</p>
+                     <div className="valid_msg">
+                        {message}
                      </div>
                     }
                    <div  className="item">
@@ -97,7 +97,7 @@ const Create=(props)=>{
                    </div>
 
                    <div  className="item">
-                        <label htmlFor="image"> <span className="image" >image</span> {images}</label>
+                        <label htmlFor="image"> <span className="image" >image</span> <span className={ invalid.image!==undefined ? "valid":"image"}>{images}</span></label>
                         <input id="image" type="file" name="image" ref={inputRefFile}  onChange={(e)=>saisir(e)} />
                    </div> 
 

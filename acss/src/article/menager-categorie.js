@@ -20,7 +20,7 @@ const MenagerCategorie=(props)=>{
    },[init])
 
   return <>
-              <h2>Gestion des articles categories</h2>
+              <h2 className='title'>Gestion des articles categories</h2>
              <section className="cardProject">
                 
               {array && array.map((value,index)=>{

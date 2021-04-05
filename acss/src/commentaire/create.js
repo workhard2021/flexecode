@@ -1,23 +1,16 @@
-import React,{useState} from 'react';
+import React,{useState,useEffect, useCallback} from 'react';
 import '../containersite/css/formulaire.css';
 import * as API from '../api/config/api';
 import ItemComment from '../containersite/item_comment';
 const Create=(props)=>{
 
     let {id_article,user}=props;
-    let info={idArticle:id_article};
-     
-    if(user.connexion) {
-         info={...info,idUser:user._id};
-    }else{
-        info={...info,idUser:''};
-    }
-    
-    const [data,setData]=useState({...info});
+    const [data,setData]=useState({});
     const [message,setMessage]=useState('');
     const [success,setSuccess]=useState(false);
     const [openComment,setOpenComment]=useState(false);
     const URL='/commentaire/create/';
+    const [up,setUp]=useState(false);
     
 
 
@@ -37,8 +30,6 @@ const Create=(props)=>{
          e.preventDefault();
          setMessage('');
         
-         setData(state=>{return {...state} })
-         
          const form_data=JSON.stringify({...data});
          const res= await API.create(form_data,URL);
          if(res){
@@ -55,10 +46,32 @@ const Create=(props)=>{
 
          }
     }
+    const init= useCallback( ()=>{
 
+     let info={idArticle:id_article};
+     if(user.connexion) {
+          info={...info,idUser:user._id};
+     }else{
+         info={...info,idUser:''};
+     }
+           setData(info); 
+
+    },[id_article,user._id,user.connexion]);
+
+
+    useEffect(()=>{
+         setUp(true);
+          init();
+        return ()=> setUp(false);
+        
+    },[init]);
+
+     if(!up){ 
+        return null;
+     }
   
       return <>
-        <section className="formulaire">
+        <section className="formulaire formulaire_comment_page">
                <br/>
                <ItemComment idArticle={id_article} user={user} setSuccess={setSuccess} success={success} setOpenComment={setOpenComment} /> 
                <br/>
@@ -66,8 +79,8 @@ const Create=(props)=>{
                <form className="login_sign" id="form_commentaire" onSubmit={(e)=>send(e)}>
                  
                    {message &&  
-                     <div className="item">
-                       <p className="valid">{message}</p>
+                     <div className="valid">
+                       {message}
                      </div>
                     }
                  

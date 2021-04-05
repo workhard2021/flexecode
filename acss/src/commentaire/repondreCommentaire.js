@@ -55,8 +55,8 @@ const Update=(props)=>{
                <form className="login_sign" id="form_commentaire" onSubmit={(e)=>send(e)}>
                  
                    {message &&  
-                     <div className="item">
-                       <p className="valid">{message}</p>
+                     <div className="valid">
+                       {message}
                      </div>
                    }
                    <div  className="item">

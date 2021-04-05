@@ -1,5 +1,5 @@
 
-const {modelUser}=require('../model/model');
+const {modelUser,modelProject,modelCommentaire}=require('../model/model');
 const {ValidationMail,upload,destroy_cloud}=require('../middleware/middleware');
 const bcrypt =require('bcrypt');
 const jwt = require('jsonwebtoken');
@@ -11,7 +11,7 @@ const sign=(req,res,next)=>{
        let data=req.body;
 	   data.deni=false;
 	   data.connexion=false;
-	   data.role='admin';
+	   data.role='user';
 	   let error={};
        let test=false;
     if(!ValidationMail(data.email) ) {
@@ -210,6 +210,7 @@ const update= async (req,res,next)=> {
      }
 
     if(files.length>0) {
+		
 		  delete data.image;
     	  for (let file of files) {
 			
@@ -280,30 +281,46 @@ const update= async (req,res,next)=> {
 
 
 const search=(req,res,next)=>{
-
+ 	 const data=req.params.fullName;
+	 const regex=new RegExp('^'+data+'*','i');
 	   modelUser.find({fullName:req.params.fullName}).sort({fullName:-1}).then((item)=>{
-	        res.status(200).json(item)
+	        
+	       return res.status(200).json(item)
 
         }).catch( e => res.status(404).json(e.message) )
 };
 
 
-const destroy=(req,res,next)=>{
+const destroy= async (req,res,next)=>{
+  
+	try { 
 
 	const {id}=req.params;
 	
-	modelUser.findOne({_id:id})
-   .then(item=>{
-		   const a=item.cloud_id && destroy_cloud(item.cloud_id);
-		   modelUser.deleteOne({_id:id})
-		 .then(x=>{
-			   return  res.status(200).json('Compte a été supprimé')
+	const item= await modelUser.findOne({_id:id});
+	const a= (item!==null && item.cloud_id) && await destroy_cloud(item.cloud_id);
+	const dlt= await modelUser.deleteOne({_id:id});
+    const comment= await modelCommentaire.remove({idUser:id});
+    const project= await modelProject.find({idUser:id});
+	
 
-		 }).catch(e=> res.status(404).json(e.message))
+   for(val of project) {
+	     const cloud_id=val.cloud_id;
+		 if(cloud_id!==null && cloud_id!==undefined) {
+			const a= await destroy_cloud(cloud_id);
+			console.log(a,comment);
+		 }
+   }
+    
+    return  res.status(200).json('Compte a été supprimé')
+  }
 
-   }).catch(e=> res.status(404).json(e.message))
+  catch(e){
 
-};
+	    return res.status(404).json(e.message)
+  }
+
+}
 
 const deni=(req,res,next)=>{
 	

@@ -9,7 +9,6 @@
      background-color: whitesmoke;
      padding:10px auto;
      box-sizing:border-box;
-
 }
 .viewArticle .item{
      position:relative;
@@ -26,7 +25,6 @@
       position:relative;
       width:100%;
       height:350px;
-    
 }
 .viewArticle .item .comment{
      position:relative;
@@ -41,12 +39,13 @@
      text-align:left;
      color:rgb(39, 37, 37);
 }
-.viewArticle .item .title *{
+.viewArticle .item .title_ *{
      padding:10px;
      box-sizing: border-box;
+     
    
 }
-.viewArticle .item .title{
+.viewArticle .item .title_{
       text-align:left;
 }
 .viewArticle .comment a{
@@ -55,6 +54,7 @@
 
 .viewArticle aside{
      display:block;
+     position: relative;
      width:35%;
      display:flex;
      align-self:flex-start;
@@ -64,50 +64,41 @@
      flex-direction:column;
      border:1px solid rgb(238, 202, 202);
      overflow-y:scroll;
-     margin-top:20px;;
+     margin-top:20px;
+     
 }
-.viewArticle aside .items{
-     position:relative;
-     display:flex;
-     justify-content:center;
-     align-items:center;
-     width:95%;
-     margin:10px auto;
-}
-.viewArticle aside .items{
+.viewArticle aside .items {
       position:relative;
-      text-decoration:none;
-      display:flex;
-      justify-content:center;
-      flex-direction:row;
       width:97%;
-      height:5em;
-      overflow: hidden;
-      background-color: white;
-      box-shadow:0px 0px 5px white ;
       border:1px solid white;
-      transition:all;
+      margin:1px auto;  
+      background-color:rgb(82, 81, 81);  
 }
 
 .viewArticle aside .items:hover{
      border-color:rgb(217, 217, 238);
-     
+     cursor: pointer;
 }
 
 .viewArticle aside .items a{
+     position: relative;
      margin:auto;
      text-decoration:none;
-     display:inline-block;
-     color: rgb(45, 45, 49);
-     padding:5px;
-    text-align:left;
+     display:block;
+     height:50px;
+     width:90%;
+     padding:.6em;
+     box-sizing:border-box;
+     color: white;
+     transition:all 0.5s;
 }
-.viewArticle aside .items a img{
-     position:relative;
-     width:180px;
-     height:100px;
+.viewArticle aside .items a:hover{
+      color:rgb(245, 181, 181);
 }
-
+.viewArticle aside h3{
+     text-align:center;
+     text-transform:capitalize;
+}
 
 @media screen and (max-width:980px){
      .viewArticle .item{
@@ -126,5 +117,9 @@
         width:90%;
         box-sizing:border-box;
      }  
+     .viewArticle aside .items a{
+           height:40px;
+     }
+     
    
 }

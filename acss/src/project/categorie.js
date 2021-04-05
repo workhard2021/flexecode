@@ -32,16 +32,15 @@ const Categorie=(props)=>{
          init()
    },[success,init])
       return <>
-              <h2>Categorie des projects</h2>
+              <h2 className="title">Categories des projets</h2>
              <section className="cardProject">
                 
               {array && array.map((value)=>{
                  return <div className="project" key={value._id}>
                         <div className="item"  >
-                           <img id="logo_image" src={value.imageUrl} alt="logo"/>
+                           <img id="logo_image" src={value.imageUrl} alt="..."/>
                            <Link to={ `/project/categorie/${value.categorie}`}>{value.categorie}</Link>
                        </div>
-                       <p>Vous trouverez tous les projects concernant {value.categorie}</p>
                    </div> 
               })}
         </section>  

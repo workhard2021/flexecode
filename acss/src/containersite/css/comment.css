@@ -1,4 +1,4 @@
-.comment{
+  .comment{
      display:flex;
      justify-content:flex-start;
      flex-direction:column;
@@ -6,6 +6,9 @@
      width:100%;
      font-family:sans-serif;
      background-color: whitesmoke;
+}
+.formulaire_comment_page{ 
+     background-color:white;
 }
 .comment #item{
       position:relative;
@@ -39,6 +42,7 @@
     color:black;
 }
 .comment #item p{
+
       position:relative;
       font-size:1em;
       color:grey;
@@ -47,6 +51,10 @@
       box-sizing:border-box;
       text-align:justify;
       border-radius:3px;
+}
+.comment p{
+     margin-bottom:2em;
+     font-size:1em;
 }
 .comment .btn{
     display:flex;
@@ -58,6 +66,15 @@
 .comment .btn a{
      text-decoration:none;
      color:black;
+}
+.comment a{
+
+     text-decoration:none;
+     color:black;
+     transition:all 0.5;
+}
+.comment a:hover{
+     color:rgb(185, 156, 156);
 }
 .comment .btn span{
     font-size:1.2em; 
@@ -115,20 +132,34 @@
     text-align:justify;
    
 }
-/* form_commentaire */
-#form_commentaire{
-    width:100%;
-}
 
-#form_commentaire #btn_item{
-     flex-direction:row;
-     justify-content:space-evenly;
-}
-
-@media screen and (max-width:980px){
+.comment .title_ span{
+    font-size:1.2em;
+    display:block;
+ }
+ 
+ .comment .title_ strong{
+       font-size:1.2em;
+ }
+ 
+@media screen and (max-width:700px){
     .comment #item p{
         position:relative;
         width:100%;
 
    }
+   .comment #item #author span{
+    color:grey;
+    font-size:1em;
+    padding:1px;
+    display:block;
+   }
+   .comment #item #author{
+        font-size:0.9em;
+   }
+   .comment .title_ span{
+       font-size:0.9em;
+       display:block;
+    }
+   
 }

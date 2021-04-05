@@ -28,7 +28,6 @@ const ItemComment=(props)=>{
             setSuccess(!success)
          }
          
-        
     }
 
     const like=async(x)=>{
@@ -62,7 +61,7 @@ const ItemComment=(props)=>{
                return  <div id="item" key={index}>
                      
                       <div id="author">
-                         <img id="logo" src={value.imageUser? value.imageUser:'/image/r1.jpg'}  alt="logo"/> 
+                         <img id="logo" src={value.imageUser? value.imageUser:'/image/r2.jpg'}  alt="logo"/> 
                          <span>{value.fullName? value.fullName :'Anonyme'}</span>
                           <span>{value.dateInsert}</span>
                       </div>
@@ -75,7 +74,7 @@ const ItemComment=(props)=>{
                                       return  val.idUser===value._id ? "like":"dislike"
                                 })
                             }><i className="far fa-thumbs-up">{value.like.length || 0}</i></span>
-                            { user.role==="admin" && <span onClick={()=>destroy(value._id)}><i className="far fa-trash-alt"></i></span> }
+                            {(user.role==="admin" || user._id===value.idUser) && <span onClick={()=>destroy(value._id)}><i className="far fa-trash-alt"></i></span> }
                            <span onClick={()=>comment(value._id)}><Link to="#form"> <i className="far fa-comment-dots"></i> </Link></span>
                       </div>
 
@@ -91,7 +90,7 @@ const ItemComment=(props)=>{
                         return   <div id="item-dot" key={index}>
        
                          <div id="author">
-                          <img id="logo_image" src={value.imageUser?value.imageUser:'/image/r1.jpg'}  alt="logo"/> 
+                          <img id="logo_image" src={value.imageUser?value.imageUser:'/image/r2.jpg'}  alt="logo"/> 
                           <span>{value.fullName || 'Anonyme'}</span>
                           <span>{value.dateInsert}</span>
                         </div>

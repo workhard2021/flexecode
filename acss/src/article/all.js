@@ -4,9 +4,9 @@ import '../containersite/css/card.css';
 import * as API from '../api/config/api';
 
 const All=(props)=>{
+   
    const [array,setArray]=useState([]);
-  
-   const URL="/project/all/";
+   const URL="/article/all/";
    const init=useCallback( async ()=>{
             const res = await API.all(URL);
             if(res.error){
@@ -24,7 +24,8 @@ const All=(props)=>{
    },[init])
   
 
-  return <section className="card">
+  return <>
+   <section className="card">
 
    {array && array.map(value=> {
     
@@ -42,7 +43,8 @@ const All=(props)=>{
       </div>
      })} 
 
-   </section>   
+   </section> 
+   </>  
 
 }
 

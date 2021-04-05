@@ -1,5 +1,6 @@
 import React,{useState,useRef,useEffect, useCallback} from 'react';
 import '../containersite/css/formulaire.css';
+import Loader from '../containersite/loader';
 import * as API from '../api/config/api';
 
 const UpdateProfil=(props)=>{
@@ -11,6 +12,7 @@ const UpdateProfil=(props)=>{
     const inputRefFile=useRef(null);
     const [invalid,setInvalid]=useState({})
     const {id}=props;
+    const [loader,setLoaer]=useState(false)
     const URL=`/user/view/${id}`;
     const URLUPDATE=`/user/update/${id}`;
     const saisir=(e)=>{
@@ -33,6 +35,7 @@ const UpdateProfil=(props)=>{
          e.preventDefault();
          setMessage('')
          setInvalid({});
+         setLoaer(true);
          const form_data=new FormData();
         if(data.image){
                 for(let i=0;i<data.image.length;i++){
@@ -43,6 +46,7 @@ const UpdateProfil=(props)=>{
          form_data.append('data',JSON.stringify(data));
          const res= await API.update(form_data,URLUPDATE);
          if(res){
+          setLoaer(false)
               if(res.error){
                    setMessage(res.data.message)
                    if(inputRefFile.current){
@@ -92,9 +96,10 @@ const UpdateProfil=(props)=>{
       return <section className="formulaire" >
                 <div className="title">Modifier vos informations</div>
                <form className="login_sign" onSubmit={(e)=>send(e)}>
+                   { loader && <Loader/> }
                    {message &&
-                     <div className="item">
-                            <p className={!success?"valid_msg":"inValid_msg"}>{message && message} </p>
+                     <div className="valid_msg">
+                            {message} 
                      </div>
                    }
 

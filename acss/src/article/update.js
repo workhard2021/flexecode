@@ -1,6 +1,7 @@
 import React,{useState,useRef,useEffect,useCallback} from 'react';
 import {useParams,useHistory} from 'react-router-dom';
 import '../containersite/css/formulaire.css';
+import Loader from '../containersite/loader';
 import * as API from '../api/config/api';
 const Update=()=>{
     const option=['php','css','java','javascript','python','nodejs','reactjs','react native'];
@@ -14,6 +15,7 @@ const Update=()=>{
     const history=useHistory();
     const URL=`/article/view/${id}`;
     const URLUPDATE=`/article/update/${id}`;
+    const [loader,setLoaer]=useState(false);
 
     const saisir=(e)=>{
           e.preventDefault();
@@ -39,7 +41,8 @@ const Update=()=>{
 
          e.preventDefault();
          setMessage('')
-         setInvalid({})
+         setInvalid({});
+         setLoaer(true);
          const form_data=new FormData();
         if(data.image){
                 for(let i=0;i<data.image.length;i++){
@@ -49,7 +52,7 @@ const Update=()=>{
         form_data.append('data',JSON.stringify(data));
          const res= await API.update(form_data,URLUPDATE);
          if(res){
-
+          setLoaer(false);
               if(res.error){
                   
                    if(inputRefFile.current){
@@ -88,9 +91,9 @@ const Update=()=>{
     },[success,init])
 
     return <section className="formulaire">
-                  <div className="title">Mettre à jour</div>
+                  <div className="title title_p">Mettre à jour</div>
                <form className="login_sign" onSubmit={(e)=>send(e)}>
-                   
+                   { loader && <Loader/> }
                    <div className="item">
                              <span className="btn_redirection" onClick={()=>history.goBack()}> <i class="fas fa-times-circle"></i></span>
                    </div>

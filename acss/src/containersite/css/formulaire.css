@@ -7,17 +7,24 @@
      width:100%;
      padding:0px;
      margin:0px;
-     background-color:gainsboro;
 }
+
 .formulaire .title{
-      font-size:2em;
+      font-size:1.2em;
       text-align:center;
       padding:10px;
       width:100%;
       box-sizing:border-box;
       font-family:sans-serif;
-      color:rgb(255, 255, 255);
+      color:rgb(29, 29, 31);
 }
+
+#project_form{
+      width:80%;
+      margin:auto;
+      background:white;
+}
+
 .formulaire .login_sign {
      position:relative;
      width:450px;
@@ -56,6 +63,7 @@
      padding:6px;
      margin:auto;
      box-sizing:border-box;
+     background-color:rgb(180, 213, 241);
 }
 .formulaire .login_sign .image{
       border-radius:2px;
@@ -91,6 +99,7 @@
      padding:6px;
      margin:auto;
      max-width:90%;
+     background-color:rgb(180, 213, 241);
 }
 .formulaire .login_sign .item button{
       width:150px;
@@ -129,26 +138,59 @@
      box-sizing:border-box;
      padding:2px;
 }
-.formulaire .inValid_msg{
-    
-    background-color:rgb(178, 224, 178);
-    text-align:center;
-}
- .formulaire .valid_msg{
-     font-size:1.5em;
-     color:yellowgreen;
-     text-align:center;  
-}
-
+ 
 .formulaire .valid{
      background-color:initial;
      color:rgb(235, 94, 94);
      font-size:1em;
      text-align:center;
      margin:0px;
+     text-align:center;
 }
-@media screen and (max-width:700px){
+
+#form_commentaire .valid{
+      color:red;
+}
+ 
+#form_commentaire #btn_item{
+     flex-direction:row;
+     justify-content:flex-start;
+     width:70%;
+     margin:auto;
+}
+#form_commentaire #btn_item button{
+     margin:0px; 
+     margin-left:1em;
+}
+/* form_commentaire */
+#form_commentaire{
+     width:100%;
+ }
+.formulaire .valid_msg{
+     
+       text-align:center;
+       font-size:1.2em;
+       background-color:rgb(240, 248, 246);
+       padding:0.2em;
+       box-sizing:border-box;
+ }
+ .formulaire .color{
+       color:red;
+ }
+ .formulaire .title_p{
+       width:50%;
+       background-color:initial;   
+ }
+ 
+@media screen and (max-width:700px) {
+
      .formulaire .login_sign{
            width:350px;
      }
+     #form_commentaire #btn_item button{
+          margin:auto; 
+          margin-left:auto;
+          font-size:.8em;
+           width:5em;
+     }  
 }

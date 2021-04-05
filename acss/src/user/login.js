@@ -1,6 +1,6 @@
 import React,{useState} from 'react';
 import {useHistory,Link} from 'react-router-dom';
-// import Verifier  from '../autre/verifier';
+import Loader from '../containersite/loader';
 import * as API from '../api/config/api';
 const Login=(props)=>{
     const [data,setData]=useState({});
@@ -8,6 +8,7 @@ const Login=(props)=>{
     const {initUser}=props;
     const history=useHistory();
     const URL='/user/login/';
+    const [loader,setLoaer]=useState(false);
 
     const saisir=(e)=>{
         e.preventDefault();
@@ -25,39 +26,39 @@ const Login=(props)=>{
     
     const send=async (e)=>{
          e.preventDefault();
-         setMessage('')
+         setMessage('');
+         setLoaer(false);
          const res= await API.login(data,URL);
 
          if(res){
+            
               if(res.error){
                    
                         localStorage.setItem('user',JSON.stringify(res.data))
-                        initUser(res.data)
-                         history.push('/article');
+                         initUser(res.data)
+                         history.push('/');
                         
               }else{
                   setMessage(res.data)
               }
 
-         }else{
-              setMessage('Veuillez actualiser la page')
          }
     }
      
     
     return  <section  className="formulaire">
 
-    <div className="title">Se connecter</div>
+    <div className="title title_p">Se connecter</div>
    <form className="login_sign" onSubmit={(e)=>send(e)} >
-       
+       { loader && <Loader/> }
        <div className="item">
-                 <span className="btn_redirection" onClick={()=>history.push('/article')}> <i className="fas fa-times-circle"></i></span>
+                 <span className="btn_redirection" onClick={()=>history.push('/')}> <i className="fas fa-times-circle"></i></span>
        </div>
-       {message && 
-         <div className="item">
-                <p className={`inValid_msg`}>{message}</p>
+       {message &&  
+         <div className="valid_msg color">
+              {message}
          </div>
-       }
+        }
        <div  className="item">
             <label htmlFor="email">Email </label>
             <input id="email" value={data.email || ''} type="email" name="email" placeholder="Votre email" onChange={(e)=>saisir(e)}/>

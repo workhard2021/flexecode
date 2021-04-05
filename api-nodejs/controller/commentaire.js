@@ -55,8 +55,7 @@ const create= async (req,res,next)=> {
    
 
    try{ 
-    const data= req.body;
-   
+    const data= req.body; 
     if(data.idUser==='' || data.idUser ===undefined) { 
         return res.status(201).json({msg:'Veuillez vous connecter pour postuler'});
     }

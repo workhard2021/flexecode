@@ -1,7 +1,7 @@
 import React,{useState,useEffect,useCallback} from 'react';
 import {Link,useParams} from 'react-router-dom';
 import * as API from '../api/config/api';
-import '../containersite/css/cardProject.css';
+import '../containersite/css/card.css';
 
 const CategorieView=(props)=>{
 
@@ -11,10 +11,12 @@ const CategorieView=(props)=>{
    const init=useCallback(  async ()=>{
            const res = await API.view(URL);
             if(res.error){
-                setArray(res.data);  
-                
+                setArray(res.data);    
             }
+          
+
    },[URL])
+
 
    useEffect(()=>{
          init()
@@ -22,20 +24,25 @@ const CategorieView=(props)=>{
    
   
    return <>
-   <h2>{array.length>0 && array[0].categorie}</h2>
-  <section className="cardProject">
+   <h2 className='title title_cat_view'> Tous les tutoriels <span>{array.length>0 && array[0].categorie}</span></h2>
+   <p className="parag">Voullez vous apprendre de nouvelles choses? alors vous êtes sur le bon chemin au bon moment.</p>
+  <section className="card">
+  {array && array.map(value=> {
+  return <div className="item" key={value._id}>
+     <div className="btn_image">
+     <Link to={`/article-view/${value._id || ''}`}>{value.categorie}</Link>
+          <Link to={`/article-view/${value._id || ''}`}><img src={value.imageUrl} alt={value.categorie}/></Link>
+     </div>
+      <h1><Link to={`/article-view/${value._id || ''}`}>{value.title}</Link></h1>
+     <p>{value.comment}</p>
+     <div className="icone">
+        <a href={value.linkGithub || ''}  rel="noreferrer" target="_blank">Github</a>
+        <a href={value.linkYoutube || ''} rel="noreferrer" target="_blank">Youtube</a>
+     </div>
+   </div>
+  })} 
 
-     {array && array.map((value,index)=>{
-        return <div className="project" key={index+1}>
-              <div className="item">
-                 <img id="logo_image" src={value.imageUrl} alt="logo"/>
-                 <Link className="dot-1" to={ `/article-view/${value._id || ''}`}><strong>{value.title} </strong></Link>
-              </div>
-            <p>{value.comment}</p>
-        </div> 
-
-     })}  
-</section>  
+</section>   
 </> 
          
 }

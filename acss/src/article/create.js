@@ -1,6 +1,9 @@
 import React,{useState,useRef} from 'react';
 import {useHistory} from 'react-router-dom';
 import '../containersite/css/formulaire.css';
+import Loader from '../containersite/loader';
+
+
 import * as API from '../api/config/api';
 
 const Create=()=>{
@@ -12,6 +15,7 @@ const Create=()=>{
     const [images,setImage]=useState('')
     const URL='/article/create';
     const history=useHistory();
+    const [loader,setLoaer]=useState(false);
 
     const saisir=(e)=>{
           e.preventDefault();
@@ -34,7 +38,8 @@ const Create=()=>{
 
          e.preventDefault();
          setMessage('')
-         setInvalid({})
+         setInvalid({});
+         setLoaer(true);
          
          const form_data=new FormData();
         if(data.image){
@@ -47,6 +52,7 @@ const Create=()=>{
         const res= await API.create(form_data,URL);
 
          if(res){
+              setLoaer(false);
               if(res.error) {
                     
                     setMessage(res.data)
@@ -58,16 +64,14 @@ const Create=()=>{
                     setInvalid(res.data)
               }
 
-         }else{
-              setMessage('Veuillez actualiser la page')
          }
     }
 
 
       return <section className="formulaire">
-                <div className="title">Creer article</div>
+                <div className="title title_p">Creer article</div>
                <form className="login_sign" onSubmit={(e)=>send(e)}>
-                   
+                  { loader && <Loader/> }
                    <div className="item">
                              <span className="btn_redirection" onClick={()=>history.goBack()}> <i className="fas fa-times-circle"></i></span>
                    </div>

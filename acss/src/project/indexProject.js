@@ -19,7 +19,7 @@ const IndexProject=(props)=>{
 				      <>
 		              <Route exact path='/project/create' render={(props)=> (<Create user={user} {...props}/>)}/>
 		              <Route exact path='/project/update/:id' render={(props)=> (<Update user={user}  {...props}/>)}/>		      
-					  <Route exact path='/project/menager-categorie' render={(props)=> (<MenagerCategorie user={user}  {...props}/>)}/>
+					  <Route exact path='/project/menager-categorie/' render={(props)=> (<MenagerCategorie user={user}  {...props}/>)}/>
 				      <Route exact path='/project/menager-categorie/:categorie' render={(props)=> (<MenagerCategorieView user={user}  {...props}/>)}/>
 					 </>
 				   }
